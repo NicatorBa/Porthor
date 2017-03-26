@@ -1,0 +1,25 @@
+{
+  "version": "0.1.0-develop-*",
+
+  "dependencies": {
+    "Flurl.Http": "1.1.2",
+    "Microsoft.AspNetCore.Http.Abstractions": "1.1.1",
+    "Microsoft.AspNetCore.Routing": "1.1.1",
+    "Microsoft.AspNetCore.Routing.Abstractions": "1.1.1",
+    "Microsoft.Extensions.Logging.Abstractions": "1.1.1",
+    "NETStandard.Library": "1.6.1",
+    "NJsonSchema": "8.14.6289.34345"
+  },
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  },
+  "buildOptions": {
+    "nowarn": [
+      "CS1591"
+    ],
+    "optimize": true,
+    "xmlDoc": true
+  }
+}
