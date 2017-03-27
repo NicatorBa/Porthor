@@ -31,7 +31,7 @@ namespace Porthor
             return _router.GetVirtualPath(context);
         }
 
-        public Task RouteAsync(RouteContext context)
+        public Task RouteAsync(Microsoft.AspNetCore.Routing.RouteContext context)
         {
             return _router.RouteAsync(context);
         }

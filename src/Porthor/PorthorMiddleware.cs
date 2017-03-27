@@ -20,7 +20,7 @@ namespace Porthor
 
         public async Task Invoke(HttpContext httpContext, IPorthorRouter router)
         {
-            var context = new RouteContext(httpContext);
+            var context = new Microsoft.AspNetCore.Routing.RouteContext(httpContext);
             context.RouteData.Routers.Add(router);
 
             await router.RouteAsync(context);
