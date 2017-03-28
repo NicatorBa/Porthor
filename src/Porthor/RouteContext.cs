@@ -57,10 +57,30 @@ namespace Porthor
                 if (_resource.Method.Equals(HttpMethod.Get))
                 {
                     var result = await endpointUrl.GetAsync();
-                    context.Response.StatusCode = (int)result.StatusCode;
-                    context.Response.ContentType = result.Content.Headers.ContentType.MediaType;
-                    var content = await result.Content.ReadAsByteArrayAsync();
-                    await context.Response.Body.WriteAsync(content, 0, content.Length);
+                    await SetResponse(context.Response, result);
+                    return;
+                }
+
+                if (_resource.Method.Equals(HttpMethod.Post))
+                {
+                    var content = new StreamContent(context.Request.Body);
+                    var result = await endpointUrl.PostAsync(content);
+                    await SetResponse(context.Response, result);
+                    return;
+                }
+
+                if (_resource.Method.Equals(HttpMethod.Put))
+                {
+                    var content = new StreamContent(context.Request.Body);
+                    var result = await endpointUrl.PutAsync(content);
+                    await SetResponse(context.Response, result);
+                    return;
+                }
+
+                if (_resource.Method.Equals(HttpMethod.Delete))
+                {
+                    var result = await endpointUrl.DeleteAsync();
+                    await SetResponse(context.Response, result);
                     return;
                 }
 
@@ -70,6 +90,14 @@ namespace Porthor
             {
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             }
+        }
+
+        private async Task SetResponse(HttpResponse response, HttpResponseMessage responseMessage)
+        {
+            response.StatusCode = (int)responseMessage.StatusCode;
+            response.ContentType = responseMessage.Content.Headers.ContentType.MediaType;
+            byte[] content = await responseMessage.Content.ReadAsByteArrayAsync();
+            await response.Body.WriteAsync(content, 0, content.Length);
         }
     }
 }
