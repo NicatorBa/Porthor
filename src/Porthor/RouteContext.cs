@@ -58,8 +58,9 @@ namespace Porthor
                 {
                     var result = await endpointUrl.GetAsync();
                     context.Response.StatusCode = (int)result.StatusCode;
-                    context.Response.Body = await result.Content.ReadAsStreamAsync();
                     context.Response.ContentType = result.Content.Headers.ContentType.MediaType;
+                    var content = await result.Content.ReadAsByteArrayAsync();
+                    await context.Response.Body.WriteAsync(content, 0, content.Length);
                     return;
                 }
 
