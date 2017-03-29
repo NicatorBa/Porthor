@@ -54,37 +54,36 @@ namespace Porthor
                 }
                 var endpointUrl = endpointUrlBuilder.ToString();
 
+                HttpResponseMessage endpointResult = null;
+
                 if (_resource.Method.Equals(HttpMethod.Get))
                 {
-                    var result = await endpointUrl.GetAsync();
-                    await SetResponse(context.Response, result);
-                    return;
+                    endpointResult = await endpointUrl.GetAsync();
                 }
 
                 if (_resource.Method.Equals(HttpMethod.Post))
                 {
                     var content = new StreamContent(context.Request.Body);
-                    var result = await endpointUrl.PostAsync(content);
-                    await SetResponse(context.Response, result);
-                    return;
+                    endpointResult = await endpointUrl.PostAsync(content);
                 }
 
                 if (_resource.Method.Equals(HttpMethod.Put))
                 {
                     var content = new StreamContent(context.Request.Body);
-                    var result = await endpointUrl.PutAsync(content);
-                    await SetResponse(context.Response, result);
-                    return;
+                    endpointResult = await endpointUrl.PutAsync(content);
                 }
 
                 if (_resource.Method.Equals(HttpMethod.Delete))
                 {
-                    var result = await endpointUrl.DeleteAsync();
-                    await SetResponse(context.Response, result);
-                    return;
+                    endpointResult = await endpointUrl.DeleteAsync();
                 }
 
-                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                if (endpointResult == null)
+                {
+                    context.Response.StatusCode = (int)HttpStatusCode.MethodNotAllowed;
+                }
+
+                await SetResponse(context.Response, endpointResult);
             }
             catch
             {
