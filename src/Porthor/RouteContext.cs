@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Constraints;
+using NJsonSchema;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -63,12 +65,52 @@ namespace Porthor
 
                 if (_resource.Method.Equals(HttpMethod.Post))
                 {
+                    if (_resource.Schema != null)
+                    {
+                        if (!context.Request.ContentType.Equals(_resource.Accept))
+                        {
+                            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                            return;
+                        }
+
+                        if (_resource.Accept.Equals(ContentType.Json))
+                        {
+                            var jsonSchema = await JsonSchema4.FromJsonAsync(_resource.Schema);
+                            var errors = jsonSchema.Validate(await StreamToString(context.Request.Body));
+                            if (errors.Count > 0)
+                            {
+                                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                                return;
+                            }
+                        }
+                    }
+
                     var content = new StreamContent(context.Request.Body);
                     endpointResult = await endpointUrl.PostAsync(content);
                 }
 
                 if (_resource.Method.Equals(HttpMethod.Put))
                 {
+                    if (_resource.Schema != null)
+                    {
+                        if (!context.Request.ContentType.Equals(_resource.Accept))
+                        {
+                            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                            return;
+                        }
+
+                        if (_resource.Accept.Equals(ContentType.Json))
+                        {
+                            var jsonSchema = await JsonSchema4.FromJsonAsync(_resource.Schema);
+                            var errors = jsonSchema.Validate(await StreamToString(context.Request.Body));
+                            if (errors.Count > 0)
+                            {
+                                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                                return;
+                            }
+                        }
+                    }
+
                     var content = new StreamContent(context.Request.Body);
                     endpointResult = await endpointUrl.PutAsync(content);
                 }
@@ -76,11 +118,6 @@ namespace Porthor
                 if (_resource.Method.Equals(HttpMethod.Delete))
                 {
                     endpointResult = await endpointUrl.DeleteAsync();
-                }
-
-                if (endpointResult == null)
-                {
-                    context.Response.StatusCode = (int)HttpStatusCode.MethodNotAllowed;
                 }
 
                 await SetResponse(context.Response, endpointResult);
@@ -97,6 +134,15 @@ namespace Porthor
             response.ContentType = responseMessage.Content.Headers.ContentType.MediaType;
             byte[] content = await responseMessage.Content.ReadAsByteArrayAsync();
             await response.Body.WriteAsync(content, 0, content.Length);
+        }
+
+        private Task<string> StreamToString(Stream stream)
+        {
+            stream.Position = 0;
+            using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+            {
+                return reader.ReadToEndAsync();
+            }
         }
     }
 }
