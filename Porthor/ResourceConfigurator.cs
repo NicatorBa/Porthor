@@ -26,7 +26,7 @@ namespace Porthor
             var routeCollection = new RouteCollection();
             foreach (var resource in _resources)
             {
-                routeCollection.Add(new RouteContext(resource).Build(_inlineConstraintResolver));
+                routeCollection.Add(new RouteBuilder(resource).Build(_inlineConstraintResolver));
             }
             _router.Router = routeCollection;
             return Task.CompletedTask;
