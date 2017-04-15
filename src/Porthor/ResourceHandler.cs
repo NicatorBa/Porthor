@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Porthor.ContentValidation;
 using Porthor.EndpointUri;
 using Porthor.Models;
 using System;
@@ -16,15 +17,18 @@ namespace Porthor
 
         private readonly HttpMethod _method;
         private readonly QueryParameterConfiguration _queryParameterConfiguration;
+        private readonly IDictionary<string, IContentValidator> _mediaTypeContentValidators;
         private readonly EndpointUriFactory _endpointUriFactory;
 
         public ResourceHandler(
             HttpMethod method,
             QueryParameterConfiguration queryParameterConfiguration,
+            IDictionary<string, IContentValidator> mediaTypeContentValidators,
             EndpointUriFactory endpointUriFactory)
         {
             _method = method;
             _queryParameterConfiguration = queryParameterConfiguration;
+            _mediaTypeContentValidators = mediaTypeContentValidators;
             _endpointUriFactory = endpointUriFactory;
         }
 
@@ -41,6 +45,21 @@ namespace Porthor
 
             if (missingQueryParameter.Count() > 0 ||
                 (notSupportedQueryParameters != null && notSupportedQueryParameters.Count() > 0))
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return;
+            }
+
+            if (_mediaTypeContentValidators.ContainsKey(context.Request.ContentType))
+            {
+                var validator = _mediaTypeContentValidators[context.Request.ContentType];
+                if (!await validator.Validate(context.Request))
+                {
+                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return;
+                }
+            }
+            else
             {
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 return;
