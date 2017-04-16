@@ -44,7 +44,7 @@ namespace Porthor
                 }
 
                 var endpointUriFactory = EndpointUriFactory.Initialize(resource);
-                var resourceHandler = new ResourceHandler(resource.Method, resource.QueryParameterConfiguration, mediaTypeContentValidators, endpointUriFactory);
+                var resourceHandler = new ResourceHandler(resource.Method, resource.QueryParameterConfiguration, resource.AuthorizationPolicies, mediaTypeContentValidators, endpointUriFactory);
                 var route = new Route(
                     new RouteHandler(resourceHandler.HandleRequestAsync),
                     resource.Path,
