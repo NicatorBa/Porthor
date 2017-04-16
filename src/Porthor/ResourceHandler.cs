@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Porthor.ContentValidation;
 using Porthor.EndpointUri;
 using Porthor.Models;
@@ -17,17 +18,20 @@ namespace Porthor
 
         private readonly HttpMethod _method;
         private readonly QueryParameterConfiguration _queryParameterConfiguration;
+        private readonly ICollection<string> _authorizationPolicies;
         private readonly IDictionary<string, IContentValidator> _mediaTypeContentValidators;
         private readonly EndpointUriFactory _endpointUriFactory;
 
         public ResourceHandler(
             HttpMethod method,
             QueryParameterConfiguration queryParameterConfiguration,
+            ICollection<string> authorizationPolicies,
             IDictionary<string, IContentValidator> mediaTypeContentValidators,
             EndpointUriFactory endpointUriFactory)
         {
             _method = method;
             _queryParameterConfiguration = queryParameterConfiguration;
+            _authorizationPolicies = authorizationPolicies;
             _mediaTypeContentValidators = mediaTypeContentValidators;
             _endpointUriFactory = endpointUriFactory;
         }
@@ -48,6 +52,32 @@ namespace Porthor
             {
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 return;
+            }
+
+            if (_authorizationPolicies.Count > 0)
+            {
+                IAuthorizationService authorizationService = (IAuthorizationService)context.RequestServices.GetService(typeof(IAuthorizationService));
+
+                if (authorizationService == null)
+                {
+                    throw new ArgumentNullException(nameof(authorizationService));
+                }
+
+                bool authorized = false;
+                foreach (var policy in _authorizationPolicies)
+                {
+                    if (await authorizationService.AuthorizeAsync(context.User, policy))
+                    {
+                        authorized = true;
+                        break;
+                    }
+                }
+
+                if (!authorized)
+                {
+                    context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return;
+                }
             }
 
             if (_mediaTypeContentValidators.ContainsKey(context.Request.ContentType))
