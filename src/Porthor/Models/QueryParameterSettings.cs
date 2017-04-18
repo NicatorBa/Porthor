@@ -2,7 +2,7 @@
 
 namespace Porthor.Models
 {
-    public class QueryParameterConfiguration
+    public class QueryParameterSettings
     {
         public ICollection<QueryParameter> QueryParameters { get; set; }
 

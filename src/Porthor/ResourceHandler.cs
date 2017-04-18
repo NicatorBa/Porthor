@@ -17,20 +17,20 @@ namespace Porthor
         private readonly static string _transferEncodingHeader = "transfer-encoding";
 
         private readonly HttpMethod _method;
-        private readonly QueryParameterConfiguration _queryParameterConfiguration;
+        private readonly QueryParameterSettings _queryParameterConfiguration;
         private readonly ICollection<string> _authorizationPolicies;
         private readonly IDictionary<string, IContentValidator> _mediaTypeContentValidators;
         private readonly EndpointUriFactory _endpointUriFactory;
 
         public ResourceHandler(
             HttpMethod method,
-            QueryParameterConfiguration queryParameterConfiguration,
+            QueryParameterSettings queryParameterSettings,
             ICollection<string> authorizationPolicies,
             IDictionary<string, IContentValidator> mediaTypeContentValidators,
             EndpointUriFactory endpointUriFactory)
         {
             _method = method;
-            _queryParameterConfiguration = queryParameterConfiguration;
+            _queryParameterConfiguration = queryParameterSettings;
             _authorizationPolicies = authorizationPolicies;
             _mediaTypeContentValidators = mediaTypeContentValidators;
             _endpointUriFactory = endpointUriFactory;
@@ -39,18 +39,24 @@ namespace Porthor
         public async Task HandleRequestAsync(HttpContext context)
         {
             var requiredQueryParameters = _queryParameterConfiguration.QueryParameters.Where(p => p.Required);
-            var missingQueryParameter = requiredQueryParameters.Where(p => !context.Request.Query.ContainsKey(p.FieldName));
+            var missingQueryParameter = requiredQueryParameters.Where(p => !context.Request.Query.ContainsKey(p.Name));
 
             IEnumerable<string> notSupportedQueryParameters = null;
             if (!_queryParameterConfiguration.AdditionalQueryParameters)
             {
-                notSupportedQueryParameters = context.Request.Query.Where(p => !_queryParameterConfiguration.QueryParameters.Any(qp => qp.FieldName.Equals(p.Key))).Select(p => p.Key);
+                notSupportedQueryParameters = context.Request.Query.Where(p => !_queryParameterConfiguration.QueryParameters.Any(qp => qp.Name.Equals(p.Key))).Select(p => p.Key);
             }
 
             if (missingQueryParameter.Count() > 0 ||
                 (notSupportedQueryParameters != null && notSupportedQueryParameters.Count() > 0))
             {
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return;
+            }
+
+            if (!context.User.Identity.IsAuthenticated)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                 return;
             }
 

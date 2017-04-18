@@ -13,9 +13,9 @@ namespace Porthor.Models
 
         public string Path { get; set; }
 
-        public ICollection<string> AuthorizationPolicies { get; set; }
+        public SecuritySettings SecuritySettings { get; set; }
 
-        public QueryParameterConfiguration QueryParameterConfiguration { get; set; }
+        public QueryParameterSettings QueryParameterSettings { get; set; }
 
         public ICollection<ContentDefinition> ContentDefinitions { get; set; }
 
