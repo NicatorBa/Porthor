@@ -4,8 +4,8 @@ namespace Porthor.Models
 {
     public class SecuritySettings
     {
-        public ICollection<string> Policies { get; set; }
-
         public bool AllowAnonymous { get; set; }
+
+        public ICollection<string> Policies { get; set; }
     }
 }
