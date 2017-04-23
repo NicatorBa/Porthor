@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Constraints;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using Porthor.ContentValidation;
 using Porthor.EndpointUri;
 using Porthor.Models;
+using Porthor.ResourceRequestValidators;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,55 +12,72 @@ namespace Porthor
 {
     public class PorthorRouter : IPorthorRouter
     {
-        private readonly IInlineConstraintResolver _constraintResolver;
+        private readonly IInlineConstraintResolver _contraintResolver;
+        private readonly IConfiguration _config;
         private readonly PorthorOptions _options;
         private IRouter _router;
 
-        public PorthorRouter(IInlineConstraintResolver constraintResolver, IOptions<PorthorOptions> options)
+        public PorthorRouter(
+            IInlineConstraintResolver constraintResolver,
+            IConfiguration config,
+            IOptions<PorthorOptions> options)
         {
-            _constraintResolver = constraintResolver;
+            _contraintResolver = constraintResolver;
+            _config = config;
             _options = options.Value;
             _router = new RouteCollection();
-        }
-
-        public async Task Build(IEnumerable<Resource> resources)
-        {
-            var routeCollection = new RouteCollection();
-            var defaultContentValidator = new DefaultContentValidator();
-            foreach (var resource in resources)
-            {
-                IDictionary<string, IContentValidator> mediaTypeContentValidators = new Dictionary<string, IContentValidator>();
-                foreach (var contentDefinition in resource.ContentDefinitions)
-                {
-                    if (_options.ContentValidatorFactories.ContainsKey(contentDefinition.MediaType) ||
-                        string.IsNullOrWhiteSpace(contentDefinition.Template))
-                    {
-                        var contentValidatorFactory = _options.ContentValidatorFactories[contentDefinition.MediaType];
-                        mediaTypeContentValidators.Add(contentDefinition.MediaType, await contentValidatorFactory.CreateContentValidatorAsync(contentDefinition.Template));
-                    }
-                    else
-                    {
-                        mediaTypeContentValidators.Add(contentDefinition.MediaType, defaultContentValidator);
-                    }
-                }
-
-                var endpointUriFactory = EndpointUriFactory.Initialize(resource);
-                var resourceHandler = new ResourceHandler(resource.Method, resource.QueryParameterSettings, resource.SecuritySettings.Policies, mediaTypeContentValidators, endpointUriFactory);
-                var route = new Route(
-                    new RouteHandler(resourceHandler.HandleRequestAsync),
-                    resource.Path,
-                    defaults: null,
-                    constraints: new RouteValueDictionary(new { httpMethod = new HttpMethodRouteConstraint(resource.Method.Method) }),
-                    dataTokens: null,
-                    inlineConstraintResolver: _constraintResolver);
-                routeCollection.Add(route);
-            }
-            _router = routeCollection;
         }
 
         public VirtualPathData GetVirtualPath(VirtualPathContext context)
         {
             return _router.GetVirtualPath(context);
+        }
+
+        public Task Initialize(IEnumerable<Resource> resources)
+        {
+            var routeCollection = new RouteCollection();
+
+            foreach (var resource in resources)
+            {
+                var validators = new List<IResourceRequestValidator>();
+
+                if (_options.EnableQueryParameters)
+                {
+                    validators.Add(new QueryParameterValidator(resource.QueryParameterSettings));
+                }
+
+                if (_options.SecurityOptions.EnableAuthentication &&
+                    !resource.SecuritySettings.AllowAnonymous)
+                {
+                    validators.Add(new AuthenticationValidator());
+                }
+
+                if (_options.SecurityOptions.EnableAuthorization)
+                {
+                    validators.Add(new AuthorizationValidator(resource.SecuritySettings.Policies));
+                }
+
+                if (_options.ContentValidationOptions.Enabled)
+                {
+                    validators.Add(new ContentDefinitionValidator(resource.ContentDefinitions, _options.ContentValidationOptions));
+                }
+
+                var resourceHandler = new ResourceHandler(
+                    validators,
+                    EndpointUriBuilder.Initialize(resource.EndpointUrl, _config));
+                var route = new Route(
+                    new RouteHandler(resourceHandler.HandleRequestAsync),
+                    resource.Path,
+                    null,
+                    new RouteValueDictionary(new { httpMethod = new HttpMethodRouteConstraint(resource.Method.Method) }),
+                    null,
+                    _contraintResolver);
+                routeCollection.Add(route);
+            }
+
+            _router = routeCollection;
+
+            return Task.CompletedTask;
         }
 
         public Task RouteAsync(RouteContext context)
