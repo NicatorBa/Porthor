@@ -2,8 +2,8 @@
 {
     public class SecurityOptions
     {
-        public bool EnableAuthentication { get; set; }
+        public bool AuthenticationValidationEnabled { get; set; }
 
-        public bool EnableAuthorization { get; set; }
+        public bool AuthorizationValidationEnabled { get; set; }
     }
 }

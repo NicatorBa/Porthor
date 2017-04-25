@@ -16,7 +16,7 @@ namespace Porthor.ResourceRequestValidators
 
         public ContentDefinitionValidator(
             IEnumerable<ContentDefinition> contentDefinitions,
-            ContentValidationOptions options)
+            ContentOptions options)
         {
             foreach (var definition in contentDefinitions)
             {

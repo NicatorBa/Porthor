@@ -2,10 +2,10 @@
 {
     public class PorthorOptions
     {
-        public bool EnableQueryParameters { get; set; }
+        public bool QueryStringValidationEnabled { get; set; }
 
-        public SecurityOptions SecurityOptions { get; private set; } = new SecurityOptions();
+        public SecurityOptions Security { get; private set; } = new SecurityOptions();
 
-        public ContentValidationOptions ContentValidationOptions { get; private set; } = new ContentValidationOptions();
+        public ContentOptions Content { get; private set; } = new ContentOptions();
     }
 }

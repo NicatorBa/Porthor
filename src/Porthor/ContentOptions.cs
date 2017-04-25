@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace Porthor
 {
-    public class ContentValidationOptions
+    public class ContentOptions
     {
         private readonly IDictionary<string, Type> _validators = new Dictionary<string, Type>();
 
-        public bool Enabled { get; set; }
+        public bool ValidationEnabled { get; set; }
 
         public void Add<T>(string mediaType)
             where T : ContentValidatorBase
