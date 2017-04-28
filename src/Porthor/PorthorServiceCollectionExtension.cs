@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Porthor;
 using System;
 
-namespace Porthor
+namespace Microsoft.Extensions.DependencyInjection
 {
     public static class PorthorServiceCollectionExtension
     {
-        public static IServiceCollection AddPorthor(
+        public static void AddPorthor(
             this IServiceCollection services,
             IConfiguration configuration,
             Action<PorthorOptions> setupAction)
@@ -24,8 +24,6 @@ namespace Porthor
             services.TryAddSingleton(configuration);
 
             services.Configure(setupAction);
-
-            return services;
         }
     }
 }
