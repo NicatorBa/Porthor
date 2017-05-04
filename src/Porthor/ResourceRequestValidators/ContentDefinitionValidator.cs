@@ -38,13 +38,20 @@ namespace Porthor.ResourceRequestValidators
 
         public async Task<HttpResponseMessage> ValidateAsync(HttpContext context)
         {
-            var validator = _validators.SingleOrDefault(v => v.Key.Equals(context.Request.ContentType)).Value;
-            if (validator == null)
+            try
+            {
+                var validator = _validators.Single(v => v.Key.Equals(context.Request.ContentType)).Value;
+                if (validator == null)
+                {
+                    return null;
+                }
+
+                return await validator.ValidateAsync(context);
+            }
+            catch
             {
                 return new HttpResponseMessage(HttpStatusCode.BadRequest);
             }
-
-            return await validator.ValidateAsync(context);
         }
     }
 }
