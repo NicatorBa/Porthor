@@ -19,7 +19,7 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             services.TryAddTransient<IInlineConstraintResolver, DefaultInlineConstraintResolver>();
-            services.TryAddTransient<IPorthorRouter, PorthorRouter>();
+            services.TryAddSingleton<IPorthorRouter, PorthorRouter>();
 
             services.TryAddSingleton(configuration);
 

@@ -11,7 +11,7 @@ namespace Porthor
 {
     public class ResourceHandler
     {
-        private const string _transferEncodingHeader = "transfer_encoding";
+        private const string _transferEncodingHeader = "transfer-encoding";
 
         private readonly IEnumerable<IResourceRequestValidator> _validators;
         private readonly EndpointUriBuilder _uriBuilder;
@@ -70,14 +70,19 @@ namespace Porthor
             {
                 context.Response.Headers[header.Key] = header.Value.ToArray();
             }
-
-            foreach (var header in responseMessage.Content.Headers)
+            if (responseMessage.Content != null)
             {
-                context.Response.Headers[header.Key] = header.Value.ToArray();
+                foreach (var header in responseMessage.Content.Headers)
+                {
+                    context.Response.Headers[header.Key] = header.Value.ToArray();
+                }
             }
 
             context.Response.Headers.Remove(_transferEncodingHeader);
-            await responseMessage.Content.CopyToAsync(context.Response.Body);
+            if (responseMessage.Content != null)
+            {
+                await responseMessage.Content.CopyToAsync(context.Response.Body);
+            }
         }
     }
 }

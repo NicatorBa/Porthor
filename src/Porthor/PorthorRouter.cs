@@ -41,23 +41,28 @@ namespace Porthor
             {
                 var validators = new List<IResourceRequestValidator>();
 
-                if (_options.QueryStringValidationEnabled)
+                if (_options.QueryStringValidationEnabled &&
+                    resource.QueryParameterSettings != null)
                 {
                     validators.Add(new QueryParameterValidator(resource.QueryParameterSettings));
                 }
 
                 if (_options.Security.AuthenticationValidationEnabled &&
+                    resource.SecuritySettings != null &&
                     !resource.SecuritySettings.AllowAnonymous)
                 {
                     validators.Add(new AuthenticationValidator());
                 }
 
-                if (_options.Security.AuthorizationValidationEnabled)
+                if (_options.Security.AuthorizationValidationEnabled &&
+                    resource.SecuritySettings != null)
                 {
                     validators.Add(new AuthorizationValidator(resource.SecuritySettings.Policies));
                 }
 
-                if (_options.Content.ValidationEnabled)
+                if (_options.Content.ValidationEnabled &&
+                    resource.ContentDefinitions != null &&
+                    resource.ContentDefinitions.Count > 0)
                 {
                     validators.Add(new ContentDefinitionValidator(resource.ContentDefinitions, _options.Content));
                 }
