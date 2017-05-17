@@ -31,7 +31,7 @@ namespace Porthor.EndpointUri
                 var routeMatch = matchRouteRegex.Match(sections[i]);
                 if (envMatch.Success)
                 {
-                    uriSections.Add(new EndpointUriSection(config[sections[i]]));
+                    uriSections.Add(new EndpointUriSection(config.GetValue<string>(envMatch.Value)));
                 }
                 else if (routeMatch.Success)
                 {

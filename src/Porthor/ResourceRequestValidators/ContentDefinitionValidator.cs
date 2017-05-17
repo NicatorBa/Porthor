@@ -40,7 +40,7 @@ namespace Porthor.ResourceRequestValidators
         {
             try
             {
-                var validator = _validators.Single(v => v.Key.Equals(context.Request.ContentType)).Value;
+                var validator = _validators.Single(v => context.Request.ContentType.Contains(v.Key)).Value;
                 if (validator == null)
                 {
                     return null;
@@ -50,7 +50,7 @@ namespace Porthor.ResourceRequestValidators
             }
             catch
             {
-                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+                return new HttpResponseMessage(HttpStatusCode.UnsupportedMediaType);
             }
         }
     }
