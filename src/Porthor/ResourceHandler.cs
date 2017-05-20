@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Porthor.ContentValidation;
+﻿using Microsoft.AspNetCore.Http;
 using Porthor.EndpointUri;
-using Porthor.Models;
+using Porthor.ResourceRequestValidators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -14,85 +11,29 @@ namespace Porthor
 {
     public class ResourceHandler
     {
-        private readonly static string _transferEncodingHeader = "transfer-encoding";
+        private const string _transferEncodingHeader = "transfer-encoding";
 
-        private readonly HttpMethod _method;
-        private readonly QueryParameterConfiguration _queryParameterConfiguration;
-        private readonly ICollection<string> _authorizationPolicies;
-        private readonly IDictionary<string, IContentValidator> _mediaTypeContentValidators;
-        private readonly EndpointUriFactory _endpointUriFactory;
+        private readonly IEnumerable<IResourceRequestValidator> _validators;
+        private readonly EndpointUriBuilder _uriBuilder;
 
         public ResourceHandler(
-            HttpMethod method,
-            QueryParameterConfiguration queryParameterConfiguration,
-            ICollection<string> authorizationPolicies,
-            IDictionary<string, IContentValidator> mediaTypeContentValidators,
-            EndpointUriFactory endpointUriFactory)
+            IEnumerable<IResourceRequestValidator> validators,
+            EndpointUriBuilder uriBuilder)
         {
-            _method = method;
-            _queryParameterConfiguration = queryParameterConfiguration;
-            _authorizationPolicies = authorizationPolicies;
-            _mediaTypeContentValidators = mediaTypeContentValidators;
-            _endpointUriFactory = endpointUriFactory;
+            _validators = validators;
+            _uriBuilder = uriBuilder;
         }
 
         public async Task HandleRequestAsync(HttpContext context)
         {
-            var requiredQueryParameters = _queryParameterConfiguration.QueryParameters.Where(p => p.Required);
-            var missingQueryParameter = requiredQueryParameters.Where(p => !context.Request.Query.ContainsKey(p.FieldName));
-
-            IEnumerable<string> notSupportedQueryParameters = null;
-            if (!_queryParameterConfiguration.AdditionalQueryParameters)
+            foreach (var validator in _validators)
             {
-                notSupportedQueryParameters = context.Request.Query.Where(p => !_queryParameterConfiguration.QueryParameters.Any(qp => qp.FieldName.Equals(p.Key))).Select(p => p.Key);
-            }
-
-            if (missingQueryParameter.Count() > 0 ||
-                (notSupportedQueryParameters != null && notSupportedQueryParameters.Count() > 0))
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                return;
-            }
-
-            if (_authorizationPolicies.Count > 0)
-            {
-                IAuthorizationService authorizationService = (IAuthorizationService)context.RequestServices.GetService(typeof(IAuthorizationService));
-
-                if (authorizationService == null)
+                var validatorResponseMessage = await validator.ValidateAsync(context);
+                if (validatorResponseMessage != null)
                 {
-                    throw new ArgumentNullException(nameof(authorizationService));
-                }
-
-                bool authorized = false;
-                foreach (var policy in _authorizationPolicies)
-                {
-                    if (await authorizationService.AuthorizeAsync(context.User, policy))
-                    {
-                        authorized = true;
-                        break;
-                    }
-                }
-
-                if (!authorized)
-                {
-                    context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    await SendResponse(context, validatorResponseMessage);
                     return;
                 }
-            }
-
-            if (_mediaTypeContentValidators.ContainsKey(context.Request.ContentType))
-            {
-                var validator = _mediaTypeContentValidators[context.Request.ContentType];
-                if (!await validator.Validate(context.Request))
-                {
-                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    return;
-                }
-            }
-            else
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                return;
             }
 
             var requestMessage = new HttpRequestMessage();
@@ -106,31 +47,40 @@ namespace Porthor
 
             foreach (var header in context.Request.Headers)
             {
-                if (!requestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray()) &&
-                    requestMessage.Content != null)
+                if (!requestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray()) && requestMessage.Content != null)
                 {
                     requestMessage.Content?.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray());
                 }
             }
 
-            Uri uri = _endpointUriFactory.CreateUri(context);
+            Uri uri = _uriBuilder.Build(context);
             requestMessage.Headers.Host = uri.Host;
             requestMessage.RequestUri = uri;
-            requestMessage.Method = _method;
+            requestMessage.Method = new HttpMethod(requestMethod);
             using (var responseMessage = await new HttpClient().SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, context.RequestAborted))
             {
-                context.Response.StatusCode = (int)responseMessage.StatusCode;
-                foreach (var header in responseMessage.Headers)
-                {
-                    context.Response.Headers[header.Key] = header.Value.ToArray();
-                }
+                await SendResponse(context, responseMessage);
+            }
+        }
 
+        private async Task SendResponse(HttpContext context, HttpResponseMessage responseMessage)
+        {
+            context.Response.StatusCode = (int)responseMessage.StatusCode;
+            foreach (var header in responseMessage.Headers)
+            {
+                context.Response.Headers[header.Key] = header.Value.ToArray();
+            }
+            if (responseMessage.Content != null)
+            {
                 foreach (var header in responseMessage.Content.Headers)
                 {
                     context.Response.Headers[header.Key] = header.Value.ToArray();
                 }
+            }
 
-                context.Response.Headers.Remove(_transferEncodingHeader);
+            context.Response.Headers.Remove(_transferEncodingHeader);
+            if (responseMessage.Content != null)
+            {
                 await responseMessage.Content.CopyToAsync(context.Response.Body);
             }
         }

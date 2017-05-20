@@ -2,7 +2,7 @@
 {
     public class QueryParameter
     {
-        public string FieldName { get; set; }
+        public string Name { get; set; }
 
         public bool Required { get; set; }
     }

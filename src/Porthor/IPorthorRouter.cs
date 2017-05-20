@@ -7,6 +7,6 @@ namespace Porthor
 {
     public interface IPorthorRouter : IRouter
     {
-        Task Build(IEnumerable<Resource> resources);
+        Task Initialize(IEnumerable<Resource> resources);
     }
 }
