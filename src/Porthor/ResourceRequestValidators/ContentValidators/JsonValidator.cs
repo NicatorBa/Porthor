@@ -3,7 +3,6 @@ using NJsonSchema;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Porthor.ResourceRequestValidators.ContentValidators
@@ -30,11 +29,8 @@ namespace Porthor.ResourceRequestValidators.ContentValidators
 
         private Task<string> StreamToString(Stream stream)
         {
-            stream.Position = 0;
-            using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-            {
-                return reader.ReadToEndAsync();
-            }
+            var streamContent = new StreamContent(stream);
+            return streamContent.ReadAsStringAsync();
         }
     }
 }
