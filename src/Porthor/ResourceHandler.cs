@@ -41,6 +41,7 @@ namespace Porthor
             if (!HttpMethods.IsGet(requestMethod) &&
                 !HttpMethods.IsDelete(requestMethod))
             {
+                context.Request.Body.Position = 0;
                 var streamContent = new StreamContent(context.Request.Body);
                 requestMessage.Content = streamContent;
             }
