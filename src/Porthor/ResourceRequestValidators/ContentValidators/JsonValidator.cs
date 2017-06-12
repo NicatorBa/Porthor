@@ -29,8 +29,8 @@ namespace Porthor.ResourceRequestValidators.ContentValidators
 
         private Task<string> StreamToString(Stream stream)
         {
-            stream.Position = 0;
             var streamContent = new StreamContent(stream);
+            stream.Position = 0;
             return streamContent.ReadAsStringAsync();
         }
     }

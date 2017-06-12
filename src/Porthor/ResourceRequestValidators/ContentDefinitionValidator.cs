@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using Porthor.Models;
 using Porthor.ResourceRequestValidators.ContentValidators;
 using System;
@@ -46,6 +47,7 @@ namespace Porthor.ResourceRequestValidators
                     return null;
                 }
 
+                context.Request.EnableRewind();
                 return await validator.ValidateAsync(context);
             }
             catch
