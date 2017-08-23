@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <Description>API gateway middleware for Asp.Net Core</Description>
-    <Version>0.6.4</Version>
+    <Version>0.6.5</Version>
     <PackageTags>aspnetcore</PackageTags>
     <PackageProjectUrl>https://github.com/NicatorBa/Porthor</PackageProjectUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/NicatorBa/Porthor/master/LICENSE</PackageLicenseUrl>
@@ -24,7 +24,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Routing" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions" Version="1.1.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="1.1.2" />
-    <PackageReference Include="NJsonSchema" Version="9.4.3" />
+    <PackageReference Include="NJsonSchema" Version="9.4.8" />
   </ItemGroup>
 
 </Project>

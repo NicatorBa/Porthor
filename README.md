@@ -70,3 +70,4 @@ public class Startup
 - [ ] Management by Web UI
 - [ ] Wiki
 - [ ] XML schema validation
+- [ ] Support for .NET Core 2.0
