@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <Description>API gateway middleware for Asp.Net Core</Description>
-    <Version>0.6.7</Version>
+    <Version>0.6.8</Version>
     <PackageTags>aspnetcore</PackageTags>
     <PackageProjectUrl>https://github.com/NicatorBa/Porthor</PackageProjectUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/NicatorBa/Porthor/master/LICENSE</PackageLicenseUrl>
