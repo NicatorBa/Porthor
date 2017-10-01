@@ -24,7 +24,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Routing" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions" Version="1.1.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="1.1.2" />
-    <PackageReference Include="NJsonSchema" Version="9.5.0" />
+    <PackageReference Include="NJsonSchema" Version="9.6.5" />
   </ItemGroup>
 
 </Project>
