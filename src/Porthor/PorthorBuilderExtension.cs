@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Microsoft.AspNetCore.Builder
 {
     /// <summary>
-    /// Extension method for adding the <see cref="PorthorMiddleware"/> to an <see cref="IApplicationBuilder"/>.
+    /// Extension methods for adding the <see cref="PorthorMiddleware"/> to an <see cref="IApplicationBuilder"/>.
     /// </summary>
     public static class PorthorBuilderExtension
     {
