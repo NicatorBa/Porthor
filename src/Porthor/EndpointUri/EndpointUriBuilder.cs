@@ -8,6 +8,9 @@ using System.Text.RegularExpressions;
 
 namespace Porthor.EndpointUri
 {
+    /// <summary>
+    /// Builder for a specific endpoint uri.
+    /// </summary>
     public class EndpointUriBuilder
     {
         private readonly IEnumerable<IEndpointUriSection> _sections;
@@ -17,6 +20,12 @@ namespace Porthor.EndpointUri
             _sections = sections;
         }
 
+        /// <summary>
+        /// Initialize an instance of <see cref="EndpointUriBuilder"/>.
+        /// </summary>
+        /// <param name="endpointUrl">The template for the endpoint url.</param>
+        /// <param name="config">Application configuration.</param>
+        /// <returns>A new instance of <see cref="EndpointUriBuilder"/>.</returns>
         public static EndpointUriBuilder Initialize(string endpointUrl, IConfiguration config)
         {
             var splitRegex = new Regex(@"(?=[{[])|(?<=[}\]])");
@@ -46,6 +55,11 @@ namespace Porthor.EndpointUri
             return new EndpointUriBuilder(uriSections);
         }
 
+        /// <summary>
+        /// Build the endpoint uri for the current context.
+        /// </summary>
+        /// <param name="context">The current <see cref="HttpContext"/>.</param>
+        /// <returns>The <see cref="Uri"/> of an endpoint.</returns>
         public Uri Build(HttpContext context)
         {
             var builder = new StringBuilder();

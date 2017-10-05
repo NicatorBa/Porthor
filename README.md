@@ -65,8 +65,9 @@ public class Startup
 
 ## Roadmap
 
-- [ ] Documentation comments
-- [ ] Tests
-- [ ] Management by Web UI
-- [ ] Wiki
-- [ ] XML schema validation
+- [ ] Documentation comments for code
+- [ ] Unit tests
+- [ ] Web UI to register, update and delete resource routes
+- [ ] Wiki & API documentation
+- [ ] Build in XML schema validation
+- [ ] Update to .NET Core 2.0

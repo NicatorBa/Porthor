@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace Porthor
 {
+    /// <summary>
+    /// Handler for specific resource request.
+    /// </summary>
     public class ResourceHandler
     {
         private const string _transferEncodingHeader = "transfer-encoding";
@@ -16,6 +19,11 @@ namespace Porthor
         private readonly IEnumerable<IResourceRequestValidator> _validators;
         private readonly EndpointUriBuilder _uriBuilder;
 
+        /// <summary>
+        /// Constructs a new instance of <see cref="ResourceHandler"/>.
+        /// </summary>
+        /// <param name="validators">Collection of validators.</param>
+        /// <param name="uriBuilder">Builder for endpoint uri.</param>
         public ResourceHandler(
             IEnumerable<IResourceRequestValidator> validators,
             EndpointUriBuilder uriBuilder)
@@ -24,6 +32,11 @@ namespace Porthor
             _uriBuilder = uriBuilder;
         }
 
+        /// <summary>
+        /// Handle the current HTTP request.
+        /// </summary>
+        /// <param name="context">Current <see cref="HttpContext"/>.</param>
+        /// <returns>The <see cref="Task"/> that represents the asynchronous initialization process.</returns>
         public async Task HandleRequestAsync(HttpContext context)
         {
             foreach (var validator in _validators)
