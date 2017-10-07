@@ -65,7 +65,7 @@ public class Startup
 
 ## Roadmap
 
-- [ ] Documentation comments for code
+- [X] Documentation comments for code
 - [ ] Unit tests
 - [ ] Web UI to register, update and delete resource routes
 - [ ] Wiki & API documentation

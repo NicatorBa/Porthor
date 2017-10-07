@@ -36,7 +36,7 @@ namespace Porthor
         /// Handle the current HTTP request.
         /// </summary>
         /// <param name="context">Current <see cref="HttpContext"/>.</param>
-        /// <returns>The <see cref="Task"/> that represents the asynchronous initialization process.</returns>
+        /// <returns>The <see cref="Task"/> that represents the asynchronous process.</returns>
         public async Task HandleRequestAsync(HttpContext context)
         {
             foreach (var validator in _validators)

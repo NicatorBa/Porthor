@@ -8,15 +8,30 @@ using System.Threading.Tasks;
 
 namespace Porthor.ResourceRequestValidators
 {
+    /// <summary>
+    /// Request validator for a query string.
+    /// </summary>
     public class QueryParameterValidator : IResourceRequestValidator
     {
         private readonly QueryParameterSettings _settings;
 
+        /// <summary>
+        /// Constructs a new instance of <see cref="QueryParameterValidator"/>.
+        /// </summary>
+        /// <param name="settings">Settings for query parameters.</param>
         public QueryParameterValidator(QueryParameterSettings settings)
         {
             _settings = settings;
         }
 
+        /// <summary>
+        /// Validates the query string of the current <see cref="HttpContext"/>.
+        /// </summary>
+        /// <param name="context">Current context.</param>
+        /// <returns>
+        /// The <see cref="Task{HttpRequestMessage}"/> that represents the asynchronous query string validation process.
+        /// Returns null if the query string is valid.
+        /// </returns>
         public Task<HttpResponseMessage> ValidateAsync(HttpContext context)
         {
             var missingQueryParameters = _settings.QueryParameters

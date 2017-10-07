@@ -3,10 +3,15 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <Description>API gateway middleware for Asp.Net Core</Description>
-    <Version>0.6.9</Version>
+    <Version>0.6.10</Version>
     <PackageTags>aspnetcore</PackageTags>
     <PackageProjectUrl>https://github.com/NicatorBa/Porthor</PackageProjectUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/NicatorBa/Porthor/master/LICENSE</PackageLicenseUrl>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

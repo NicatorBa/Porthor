@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace Porthor
 {
+    /// <summary>
+    /// Represents a router.
+    /// </summary>
     public class PorthorRouter : IPorthorRouter
     {
         private readonly IInlineConstraintResolver _contraintResolver;
@@ -17,6 +20,12 @@ namespace Porthor
         private readonly PorthorOptions _options;
         private IRouter _router;
 
+        /// <summary>
+        /// Constructs a new instance of <see cref="PorthorRouter"/>.
+        /// </summary>
+        /// <param name="constraintResolver">Resolver for inline constraints.</param>
+        /// <param name="config">Application configuration properties.</param>
+        /// <param name="options">Configuration options.</param>
         public PorthorRouter(
             IInlineConstraintResolver constraintResolver,
             IConfiguration config,
@@ -28,11 +37,21 @@ namespace Porthor
             _router = new RouteCollection();
         }
 
+        /// <summary>
+        /// Get <see cref="VirtualPathData"/> from <see cref="VirtualPathContext"/>.
+        /// </summary>
+        /// <param name="context">A context for virtual path generation operations.</param>
+        /// <returns>Information about the route and virtual path.</returns>
         public VirtualPathData GetVirtualPath(VirtualPathContext context)
         {
             return _router.GetVirtualPath(context);
         }
 
+        /// <summary>
+        /// Initialize the router with the specified resources.
+        /// </summary>
+        /// <param name="resources">Collection of API resources.</param>
+        /// <returns>The <see cref="Task"/> that represents the asynchronous initialization process.</returns>
         public Task Initialize(IEnumerable<Resource> resources)
         {
             var routeCollection = new RouteCollection();
@@ -94,6 +113,11 @@ namespace Porthor
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Route the current context.
+        /// </summary>
+        /// <param name="context">A context object for Microsoft.AspNetCore.Routing.IRouter.RouteAsync(Microsoft.AspNetCore.Routing.RouteContext).</param>
+        /// <returns>The <see cref="Task"/> that represents the asynchronous routing process.</returns>
         public Task RouteAsync(RouteContext context)
         {
             return _router.RouteAsync(context);
