@@ -11,10 +11,18 @@ using System.Threading.Tasks;
 
 namespace Porthor.ResourceRequestValidators
 {
+    /// <summary>
+    /// Request validator for content.
+    /// </summary>
     public class ContentDefinitionValidator : IResourceRequestValidator
     {
         private readonly IDictionary<string, ContentValidatorBase> _validators = new Dictionary<string, ContentValidatorBase>();
 
+        /// <summary>
+        /// Constructs a new instance of <see cref="ContentDefinitionValidator"/>.
+        /// </summary>
+        /// <param name="contentDefinitions">Collection of <see cref="ContentDefinition"/>.</param>
+        /// <param name="options">Content configuration options.</param>
         public ContentDefinitionValidator(
             IEnumerable<ContentDefinition> contentDefinitions,
             ContentOptions options)
@@ -37,6 +45,14 @@ namespace Porthor.ResourceRequestValidators
             }
         }
 
+        /// <summary>
+        /// Validates the content of the current <see cref="HttpContext"/>.
+        /// </summary>
+        /// <param name="context">Current context.</param>
+        /// <returns>
+        /// The <see cref="Task{HttpRequestMessage}"/> that represents the asynchronous query string validation process.
+        /// Returns null if the content is valid.
+        /// </returns>
         public async Task<HttpResponseMessage> ValidateAsync(HttpContext context)
         {
             try
