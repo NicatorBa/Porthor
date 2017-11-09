@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleGatewaySample", "samp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{B239D74E-198D-48CA-8454-5D0BD55F99CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Porthor.Test", "test\Porthor.Test\Porthor.Test.csproj", "{D06FC1D6-DE9B-4C1F-A62B-28239E5B7CF6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Porthor.Tests", "test\Porthor.Tests\Porthor.Tests.csproj", "{D06FC1D6-DE9B-4C1F-A62B-28239E5B7CF6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
