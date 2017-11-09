@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Routing;
-using Porthor.EndpointUri;
+﻿using Porthor.EndpointUri;
 using Xunit;
 
 namespace Porthor.Test
@@ -7,17 +6,14 @@ namespace Porthor.Test
     public class EndpointUriSectionTests
     {
         [Fact]
-        public void CreateSection_InitializeWithKeyName_ReturnTextAssociatedToKey()
+        public void CreateSection_InitializeWithText_ReturnThisText()
         {
             // Arrange
-            var key = "textKey";
             var text = "sectionText";
-            var dict = new RouteValueDictionary();
-            dict.Add(key, text);
-            var section = new RouteValueSection(key);
+            var section = new EndpointUriSection(text);
 
             // Act
-            var result = section.CreateSection(dict);
+            var result = section.CreateSection(null);
 
             // Assert
             Assert.Equal(text, result);
