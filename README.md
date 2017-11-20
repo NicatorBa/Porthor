@@ -5,7 +5,7 @@ Porthor is an API gateway middleware for Asp.Net Core. It offers an easy to use 
 
 ## Getting started
 
-- **Update your `.csproj` file** to reference `Porthor`package
+- **Update your `.csproj` file** to reference `Porthor` package
 
 - **Configure Porthor service** in `Startup`:
 
