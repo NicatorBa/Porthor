@@ -12,20 +12,11 @@ Porthor is an API gateway middleware for Asp.Net Core. It offers an easy to use 
 ```csharp
 public class Startup
 {
-    private readonly IConfiguration _configuration;
-
-    public Startup()
-    {
-        // Add your configuration sources
-        _configuration = new ConfigurationBuilder()
-                                .Build();
-    }
-
     public void ConfigureServices(IServiceCollection service)
     {
         // Register the Porthor services
         // with your gateway configuration
-        services.AddPorthor(_configuration, options =>
+        services.AddPorthor(options =>
         {
             // Activate query string checking
             // Offers a more strict way to handle query params for resources
