@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Constraints;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Porthor.EndpointUri;
 using Porthor.Models;
@@ -16,7 +15,6 @@ namespace Porthor
     public class PorthorRouter : IPorthorRouter
     {
         private readonly IInlineConstraintResolver _contraintResolver;
-        private readonly IConfiguration _config;
         private readonly PorthorOptions _options;
         private IRouter _router;
 
@@ -24,15 +22,12 @@ namespace Porthor
         /// Constructs a new instance of <see cref="PorthorRouter"/>.
         /// </summary>
         /// <param name="constraintResolver">Resolver for inline constraints.</param>
-        /// <param name="config">Application configuration properties.</param>
         /// <param name="options">Configuration options.</param>
         public PorthorRouter(
             IInlineConstraintResolver constraintResolver,
-            IConfiguration config,
             IOptions<PorthorOptions> options)
         {
             _contraintResolver = constraintResolver;
-            _config = config;
             _options = options.Value;
             _router = new RouteCollection();
         }
@@ -97,7 +92,8 @@ namespace Porthor
 
                 var resourceHandler = new ResourceHandler(
                     validators,
-                    EndpointUriBuilder.Initialize(resource.EndpointUrl, _config));
+                    EndpointUriBuilder.Initialize(resource.EndpointUrl, _options.Configuration),
+                    _options);
                 var route = new Route(
                     new RouteHandler(resourceHandler.HandleRequestAsync),
                     resource.Path,

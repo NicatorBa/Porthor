@@ -43,7 +43,8 @@ namespace Porthor.ResourceRequestValidators
             bool authorized = false;
             foreach (var policy in _policies)
             {
-                if (await authorizationService.AuthorizeAsync(context.User, policy))
+                var result = await authorizationService.AuthorizeAsync(context.User, policy);
+                if (result.Succeeded)
                 {
                     authorized = true;
                     break;

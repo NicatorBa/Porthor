@@ -36,7 +36,7 @@ public class Startup
             options.Security.AuthenticationValidationEnabled = true;
 
             // Protect your API with policiy-based authorization
-            options.Security.AuthorizationValidationEnabled =true;
+            options.Security.AuthorizationValidationEnabled = true;
 
             // Enable content body validation for POST and PUT methods
             options.Content.ValidationEnabled = true;
@@ -70,4 +70,4 @@ public class Startup
 - [ ] Web UI to register, update and delete resource routes
 - [ ] Wiki & API documentation
 - [ ] Build in XML schema validation
-- [ ] Update to .NET Core 2.0
+- [X] Update to .NET Core 2.0

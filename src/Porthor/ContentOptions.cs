@@ -15,7 +15,7 @@ namespace Porthor
         /// <summary>
         /// Flag indicating whether the content is being validated.
         /// </summary>
-        public bool ValidationEnabled { get; set; }
+        public bool ValidationEnabled { get; set; } = false;
 
         /// <summary>
         /// Add a validator for the specified media type.

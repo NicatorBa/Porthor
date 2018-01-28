@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A5E3EBBA-BF6F-4F73-B98C-F7656127526D}"
 EndProject
@@ -13,7 +13,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleGatewaySample", "samp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{B239D74E-198D-48CA-8454-5D0BD55F99CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Porthor.Tests", "test\Porthor.Tests\Porthor.Tests.csproj", "{D06FC1D6-DE9B-4C1F-A62B-28239E5B7CF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Porthor.Tests", "test\Porthor.Tests\Porthor.Tests.csproj", "{D06FC1D6-DE9B-4C1F-A62B-28239E5B7CF6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D4CFF2DE-0DD7-4340-BC12-CCBD9EC37E57}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

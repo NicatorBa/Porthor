@@ -40,6 +40,11 @@ namespace Porthor.EndpointUri
                 var routeMatch = matchRouteRegex.Match(sections[i]);
                 if (envMatch.Success)
                 {
+                    if (config is null)
+                    {
+                        throw new ArgumentNullException(nameof(config));
+                    }
+
                     uriSections.Add(new EndpointUriSection(config.GetValue<string>(envMatch.Value)));
                 }
                 else if (routeMatch.Success)

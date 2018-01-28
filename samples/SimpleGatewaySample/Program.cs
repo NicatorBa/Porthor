@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using System.IO;
+﻿using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
 
 namespace SimpleGatewaySample
 {
@@ -7,10 +7,7 @@ namespace SimpleGatewaySample
     {
         public static void Main(string[] args)
         {
-            var host = new WebHostBuilder()
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
+            var host = WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
                 .UseApplicationInsights()
                 .Build();
