@@ -15,12 +15,13 @@ namespace Porthor.Tests
     public class ProxyTests
     {
         [Theory]
-        [InlineData("GET", "api/v1/data")]
-        [InlineData("POST", "api/v2/data")]
-        [InlineData("PUT", "api/v3/data")]
-        [InlineData("DELETE", "api/v4/data")]
+        [InlineData("GET", "api/v1.1/data")]
+        [InlineData("POST", "api/v1.2/data")]
+        [InlineData("PUT", "api/v1.3/data")]
+        [InlineData("DELETE", "api/v1.4/data")]
         public async Task Request_WithoutBody_ReturnsResponseHeader(string method, string path)
         {
+            // Arrange
             var builder = new WebHostBuilder()
                 .ConfigureServices(services =>
                 {
@@ -43,7 +44,6 @@ namespace Porthor.Tests
                 {
                     var resource = new Resource
                     {
-                        Name = "Test",
                         Method = new HttpMethod(method),
                         Path = path,
                         EndpointUrl = $"http://example.org/{path}"
@@ -51,11 +51,13 @@ namespace Porthor.Tests
 
                     app.UsePorthor(new[] { resource });
                 });
-
             var server = new TestServer(builder);
 
+            // Act
             var requestMessage = new HttpRequestMessage(new HttpMethod(method), path);
             var responseMessage = await server.CreateClient().SendAsync(requestMessage);
+
+            // Assert
             Assert.Equal(HttpStatusCode.OK, responseMessage.StatusCode);
             var responseContent = responseMessage.Content.ReadAsStringAsync();
             Assert.True(responseContent.Wait(3000) && !responseContent.IsFaulted);
@@ -66,10 +68,11 @@ namespace Porthor.Tests
         }
 
         [Theory]
-        [InlineData("POST", "api/v5/data")]
-        [InlineData("PUT", "api/v6/data")]
+        [InlineData("POST", "api/v1.5/data")]
+        [InlineData("PUT", "api/v1.6/data")]
         public async Task Request_WithBody_ReturnsResponse(string method, string path)
         {
+            // Arrange
             var builder = new WebHostBuilder()
                 .ConfigureServices(services =>
                 {
@@ -94,7 +97,6 @@ namespace Porthor.Tests
                 {
                     var resource = new Resource
                     {
-                        Name = "Test",
                         Method = new HttpMethod(method),
                         Path = path,
                         EndpointUrl = $"http://example.org/{path}"
@@ -102,12 +104,14 @@ namespace Porthor.Tests
 
                     app.UsePorthor(new[] { resource });
                 });
-
             var server = new TestServer(builder);
 
+            // Act
             var requestMessage = new HttpRequestMessage(new HttpMethod(method), path);
             requestMessage.Content = new StringContent("Request Body");
             var responseMessage = await server.CreateClient().SendAsync(requestMessage);
+
+            // Assert
             Assert.Equal(HttpStatusCode.OK, responseMessage.StatusCode);
             var responseContent = responseMessage.Content.ReadAsStringAsync();
             Assert.True(responseContent.Wait(3000) && !responseContent.IsFaulted);
