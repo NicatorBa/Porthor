@@ -93,7 +93,7 @@ namespace Porthor
                 var resourceHandler = new ResourceHandler(
                     validators,
                     EndpointUriBuilder.Initialize(resource.EndpointUrl, _options.Configuration),
-                    _options);
+                    _options.BackChannelMessageHandler);
                 var route = new Route(
                     new RouteHandler(resourceHandler.HandleRequestAsync),
                     resource.Path,

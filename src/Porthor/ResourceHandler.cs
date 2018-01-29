@@ -25,15 +25,15 @@ namespace Porthor
         /// </summary>
         /// <param name="validators">Collection of validators.</param>
         /// <param name="uriBuilder">Builder for endpoint uri.</param>
-        /// <param name="options">Configuration options.</param>
+        /// <param name="httpMessageHandler">Message handler for HTTP.</param>
         public ResourceHandler(
             IEnumerable<IResourceRequestValidator> validators,
             EndpointUriBuilder uriBuilder,
-            PorthorOptions options)
+            HttpMessageHandler httpMessageHandler = null)
         {
             _validators = validators;
             _uriBuilder = uriBuilder;
-            _httpClient = new HttpClient(options.BackChannelMessageHandler ?? new HttpClientHandler());
+            _httpClient = new HttpClient(httpMessageHandler ?? new HttpClientHandler());
         }
 
         /// <summary>
