@@ -1,7 +1,7 @@
 # Porthor
 **What's Porthor?**
 
-Porthor is an API gateway middleware for Asp.Net Core. It offers an easy to use way to register APIs from other sources to your application. You can also protect your API by using ASP.NET Core policy-based authorization.
+Porthor is an API gateway middleware for Asp.Net Core 2.0. It offers an easy to use way to register APIs from other sources to your application. You can also protect your API by using ASP.NET Core policy-based authorization.
 
 ## Getting started
 
@@ -12,20 +12,11 @@ Porthor is an API gateway middleware for Asp.Net Core. It offers an easy to use 
 ```csharp
 public class Startup
 {
-    private readonly IConfiguration _configuration;
-
-    public Startup()
-    {
-        // Add your configuration sources
-        _configuration = new ConfigurationBuilder()
-                                .Build();
-    }
-
     public void ConfigureServices(IServiceCollection service)
     {
         // Register the Porthor services
         // with your gateway configuration
-        services.AddPorthor(_configuration, options =>
+        services.AddPorthor(options =>
         {
             // Activate query string checking
             // Offers a more strict way to handle query params for resources
@@ -36,7 +27,7 @@ public class Startup
             options.Security.AuthenticationValidationEnabled = true;
 
             // Protect your API with policiy-based authorization
-            options.Security.AuthorizationValidationEnabled =true;
+            options.Security.AuthorizationValidationEnabled = true;
 
             // Enable content body validation for POST and PUT methods
             options.Content.ValidationEnabled = true;
@@ -65,9 +56,6 @@ public class Startup
 
 ## Roadmap
 
-- [X] Documentation comments for code
-- [ ] Unit tests
+- [ ] Build in XML schema validation
 - [ ] Web UI to register, update and delete resource routes
 - [ ] Wiki & API documentation
-- [ ] Build in XML schema validation
-- [ ] Update to .NET Core 2.0

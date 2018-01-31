@@ -18,18 +18,22 @@ namespace Porthor
 
         private readonly IEnumerable<IResourceRequestValidator> _validators;
         private readonly EndpointUriBuilder _uriBuilder;
+        private readonly HttpClient _httpClient;
 
         /// <summary>
         /// Constructs a new instance of <see cref="ResourceHandler"/>.
         /// </summary>
         /// <param name="validators">Collection of validators.</param>
         /// <param name="uriBuilder">Builder for endpoint uri.</param>
+        /// <param name="httpMessageHandler">Message handler for HTTP.</param>
         public ResourceHandler(
             IEnumerable<IResourceRequestValidator> validators,
-            EndpointUriBuilder uriBuilder)
+            EndpointUriBuilder uriBuilder,
+            HttpMessageHandler httpMessageHandler = null)
         {
             _validators = validators;
             _uriBuilder = uriBuilder;
+            _httpClient = new HttpClient(httpMessageHandler ?? new HttpClientHandler());
         }
 
         /// <summary>
@@ -70,7 +74,7 @@ namespace Porthor
             requestMessage.Headers.Host = uri.Host;
             requestMessage.RequestUri = uri;
             requestMessage.Method = new HttpMethod(requestMethod);
-            using (var responseMessage = await new HttpClient().SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, context.RequestAborted))
+            using (var responseMessage = await _httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, context.RequestAborted))
             {
                 await SendResponse(context, responseMessage);
             }

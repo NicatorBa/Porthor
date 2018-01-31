@@ -1,4 +1,7 @@
-﻿namespace Porthor
+﻿using Microsoft.Extensions.Configuration;
+using System.Net.Http;
+
+namespace Porthor
 {
     /// <summary>
     /// Configuration options for <see cref="Microsoft.AspNetCore.Builder.PorthorMiddleware"/>.
@@ -6,9 +9,19 @@
     public class PorthorOptions
     {
         /// <summary>
-        /// Indicator that indicates whether the query string is to be validated.
+        /// HTTP message handler.
         /// </summary>
-        public bool QueryStringValidationEnabled { get; set; }
+        public HttpMessageHandler BackChannelMessageHandler { get; set; }
+
+        /// <summary>
+        /// Application configuration properties.
+        /// </summary>
+        public IConfiguration Configuration { get; set; }
+
+        /// <summary>
+        /// Flag that indicates whether the query string is to be validated.
+        /// </summary>
+        public bool QueryStringValidationEnabled { get; set; } = false;
 
         /// <summary>
         /// Security configuration options.
