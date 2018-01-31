@@ -44,7 +44,7 @@ namespace Porthor.Tests
                                 "InvalidPolicy"
                             }
                         },
-                        EndpointUrl = $"http://example.org/api/v3.1/data"
+                        EndpointUrl = "http://example.org/api/v3.1/data"
                     };
 
                     app.UsePorthor(new[] { resource });
@@ -98,7 +98,7 @@ namespace Porthor.Tests
                                 "ValidPolicy"
                             }
                         },
-                        EndpointUrl = $"http://example.org/api/v3.2/data"
+                        EndpointUrl = "http://example.org/api/v3.2/data"
                     };
 
                     app.UsePorthor(new[] { resource });

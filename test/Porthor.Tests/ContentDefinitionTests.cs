@@ -37,7 +37,7 @@ namespace Porthor.Tests
                         {
                             new ContentDefinition{ MediaType = PorthorConstants.MediaType.Json }
                         },
-                        EndpointUrl = $"http://example.org/api/v5.1/data"
+                        EndpointUrl = "http://example.org/api/v5.1/data"
                     };
 
                     app.UsePorthor(new[] { resource });
@@ -83,7 +83,7 @@ namespace Porthor.Tests
                         {
                             new ContentDefinition{ MediaType = PorthorConstants.MediaType.Json }
                         },
-                        EndpointUrl = $"http://example.org/api/v5.2/data"
+                        EndpointUrl = "http://example.org/api/v5.2/data"
                     };
 
                     app.UsePorthor(new[] { resource });
@@ -125,7 +125,7 @@ namespace Porthor.Tests
                                 Template = "{ \"$schema\": \"http://json-schema.org/draft-04/schema#\", \"title\": \"Person\", \"type\": \"object\", \"additionalProperties\": false, \"required\": [ \"name\" ], \"properties\": { \"name\": { \"type\": \"string\" } } }"
                             }
                         },
-                        EndpointUrl = $"http://example.org/api/v5.3/data"
+                        EndpointUrl = "http://example.org/api/v5.3/data"
                     };
 
                     app.UsePorthor(new[] { resource });
@@ -175,7 +175,7 @@ namespace Porthor.Tests
                                 Template = "{ \"$schema\": \"http://json-schema.org/draft-04/schema#\", \"title\": \"Person\", \"type\": \"object\", \"additionalProperties\": false, \"required\": [ \"name\" ], \"properties\": { \"name\": { \"type\": \"string\" } } }"
                             }
                         },
-                        EndpointUrl = $"http://example.org/api/v5.4/data"
+                        EndpointUrl = "http://example.org/api/v5.4/data"
                     };
 
                     app.UsePorthor(new[] { resource });

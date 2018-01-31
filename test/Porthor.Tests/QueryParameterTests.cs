@@ -42,7 +42,7 @@ namespace Porthor.Tests
                                 }
                             }
                         },
-                        EndpointUrl = $"http://example.org/api/v4.1/data"
+                        EndpointUrl = "http://example.org/api/v4.1/data"
                     };
 
                     app.UsePorthor(new[] { resource });
@@ -94,7 +94,7 @@ namespace Porthor.Tests
                                 }
                             }
                         },
-                        EndpointUrl = $"http://example.org/api/v4.2/data"
+                        EndpointUrl = "http://example.org/api/v4.2/data"
                     };
 
                     app.UsePorthor(new[] { resource });
@@ -127,7 +127,7 @@ namespace Porthor.Tests
                     {
                         Method = HttpMethod.Get,
                         Path = "api/v4.3/data",
-                        EndpointUrl = $"http://example.org/api/v4.3/data"
+                        EndpointUrl = "http://example.org/api/v4.3/data"
                     };
 
                     app.UsePorthor(new[] { resource });
@@ -178,7 +178,7 @@ namespace Porthor.Tests
                                 }
                             }
                         },
-                        EndpointUrl = $"http://example.org/api/v4.4/data"
+                        EndpointUrl = "http://example.org/api/v4.4/data"
                     };
 
                     app.UsePorthor(new[] { resource });
@@ -223,7 +223,7 @@ namespace Porthor.Tests
                         {
                             AdditionalQueryParameters = true
                         },
-                        EndpointUrl = $"http://example.org/api/v4.5/data"
+                        EndpointUrl = "http://example.org/api/v4.5/data"
                     };
 
                     app.UsePorthor(new[] { resource });

@@ -31,7 +31,7 @@ namespace Porthor.Tests
                     {
                         Method = HttpMethod.Get,
                         Path = "api/v2.1/data",
-                        EndpointUrl = $"http://example.org/api/v2.1/data"
+                        EndpointUrl = "http://example.org/api/v2.1/data"
                     };
 
                     app.UsePorthor(new[] { resource });
@@ -76,7 +76,7 @@ namespace Porthor.Tests
                         {
                             AllowAnonymous = true
                         },
-                        EndpointUrl = $"http://example.org/api/v2.2/data"
+                        EndpointUrl = "http://example.org/api/v2.2/data"
                     };
 
                     app.UsePorthor(new[] { resource });
@@ -126,7 +126,7 @@ namespace Porthor.Tests
                     {
                         Method = HttpMethod.Get,
                         Path = "api/v2.3/data",
-                        EndpointUrl = $"http://example.org/api/v2.3/data"
+                        EndpointUrl = "http://example.org/api/v2.3/data"
                     };
 
                     app.UsePorthor(new[] { resource });
