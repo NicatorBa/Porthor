@@ -1,7 +1,12 @@
 # Porthor
+
+[![NuGet](https://img.shields.io/nuget/v/Porthor.svg)](https://www.nuget.org/packages?q=Porthor)
+[![GitHub issues](https://img.shields.io/github/issues/NicatorBa/Porthor.svg)](https://github.com/NicatorBa/Porthor/issues)
+[![GitHub license](https://img.shields.io/github/license/NicatorBa/Porthor.svg)](https://github.com/NicatorBa/Porthor/blob/master/LICENSE)
+
 **What's Porthor?**
 
-Porthor is an API gateway middleware for Asp.Net Core 2.0. It offers an easy to use way to register APIs from other sources to your application. You can also protect your API by using ASP.NET Core policy-based authorization.
+Porthor is an API gateway middleware for ASP.NET Core 2.0. It offers an easy to use way to register APIs from other sources to your application. You can also protect your API by using ASP.NET Core policy-based authorization.
 
 ## Getting started
 
