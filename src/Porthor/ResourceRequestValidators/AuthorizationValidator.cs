@@ -40,22 +40,16 @@ namespace Porthor.ResourceRequestValidators
                 throw new InvalidOperationException(nameof(IAuthorizationService));
             }
 
-            bool authorized = false;
             foreach (var policy in _policies)
             {
                 var result = await authorizationService.AuthorizeAsync(context.User, policy);
                 if (result.Succeeded)
                 {
-                    authorized = true;
-                    break;
+                    return null;
                 }
             }
-            if (!authorized)
-            {
-                return new HttpResponseMessage(HttpStatusCode.Forbidden);
-            }
 
-            return null;
+            return new HttpResponseMessage(HttpStatusCode.Forbidden);
         }
     }
 }
