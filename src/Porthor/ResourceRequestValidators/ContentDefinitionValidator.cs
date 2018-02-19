@@ -55,21 +55,20 @@ namespace Porthor.ResourceRequestValidators
         /// </returns>
         public async Task<HttpResponseMessage> ValidateAsync(HttpContext context)
         {
-            try
-            {
-                var validator = _validators.Single(v => context.Request.ContentType.Contains(v.Key)).Value;
-                if (validator == null)
-                {
-                    return null;
-                }
-
-                context.Request.EnableRewind();
-                return await validator.ValidateAsync(context);
-            }
-            catch
+            var mediaTypeValidator = _validators.SingleOrDefault(v => context.Request.ContentType.Contains(v.Key));
+            if (mediaTypeValidator.Key == null)
             {
                 return new HttpResponseMessage(HttpStatusCode.UnsupportedMediaType);
             }
+
+            var validator = mediaTypeValidator.Value;
+            if (validator == null)
+            {
+                return null;
+            }
+
+            context.Request.EnableRewind();
+            return await validator.ValidateAsync(context);
         }
     }
 }
