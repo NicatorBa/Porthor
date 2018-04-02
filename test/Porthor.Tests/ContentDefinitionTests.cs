@@ -45,8 +45,10 @@ namespace Porthor.Tests
             var server = new TestServer(builder);
 
             // Act
-            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "api/v5.1/data");
-            requestMessage.Content = new StringContent("Request Body");
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "api/v5.1/data")
+            {
+                Content = new StringContent("Request Body")
+            };
             var responseMessage = await server.CreateClient().SendAsync(requestMessage);
 
             // Assert
@@ -91,8 +93,10 @@ namespace Porthor.Tests
             var server = new TestServer(builder);
 
             // Act
-            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "api/v5.2/data");
-            requestMessage.Content = new StringContent("{ \"name\": \"demo\" }", Encoding.UTF8, PorthorConstants.MediaType.Json);
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "api/v5.2/data")
+            {
+                Content = new StringContent("{ \"name\": \"demo\" }", Encoding.UTF8, PorthorConstants.MediaType.Json)
+            };
             var responseMessage = await server.CreateClient().SendAsync(requestMessage);
 
             // Assert
@@ -133,8 +137,10 @@ namespace Porthor.Tests
             var server = new TestServer(builder);
 
             // Act
-            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "api/v5.3/data");
-            requestMessage.Content = new StringContent("{ \"company\": \"demo\" }", Encoding.UTF8, PorthorConstants.MediaType.Json);
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "api/v5.3/data")
+            {
+                Content = new StringContent("{ \"company\": \"demo\" }", Encoding.UTF8, PorthorConstants.MediaType.Json)
+            };
             var responseMessage = await server.CreateClient().SendAsync(requestMessage);
 
             // Assert
@@ -183,8 +189,10 @@ namespace Porthor.Tests
             var server = new TestServer(builder);
 
             // Act
-            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "api/v5.4/data");
-            requestMessage.Content = new StringContent("{ \"name\": \"demo\" }", Encoding.UTF8, PorthorConstants.MediaType.Json);
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "api/v5.4/data")
+            {
+                Content = new StringContent("{ \"name\": \"demo\" }", Encoding.UTF8, PorthorConstants.MediaType.Json)
+            };
             var responseMessage = await server.CreateClient().SendAsync(requestMessage);
 
             // Assert

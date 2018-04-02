@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace SimpleGatewaySample
 {
-    public static class Program
+    public class Program
     {
+        protected Program() { }
+
         public static void Main(string[] args)
         {
             var host = WebHost.CreateDefaultBuilder(args)
