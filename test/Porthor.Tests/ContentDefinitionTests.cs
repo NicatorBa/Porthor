@@ -66,7 +66,7 @@ namespace Porthor.Tests
                     {
                         options.BackChannelMessageHandler = new TestMessageHandler
                         {
-                            Sender = request =>
+                            Sender = (request, cancellationToken) =>
                             {
                                 var response = new HttpResponseMessage(HttpStatusCode.OK);
                                 return response;
@@ -158,7 +158,7 @@ namespace Porthor.Tests
                     {
                         options.BackChannelMessageHandler = new TestMessageHandler
                         {
-                            Sender = request =>
+                            Sender = (request, cancellationToken) =>
                             {
                                 var response = new HttpResponseMessage(HttpStatusCode.OK);
                                 return response;

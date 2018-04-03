@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Porthor.Models;
-using System.Collections.Generic;
+using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -12,10 +12,10 @@ using Xunit;
 
 namespace Porthor.Tests
 {
-    public class RouteTests
+    public class TimeoutTests
     {
         [Fact]
-        public async Task Request_WithRouteValue_ReturnsOk()
+        public async Task Request_WaitForDefaultTimeout_ReturnsGatewayTimeout()
         {
             // Arrange
             var builder = new WebHostBuilder()
@@ -27,9 +27,10 @@ namespace Porthor.Tests
                         {
                             Sender = (request, cancellationToken) =>
                             {
-                                Assert.Equal("http://example.org/api/v6.1/samples/10", request.RequestUri.ToString());
-                                var response = new HttpResponseMessage(HttpStatusCode.OK);
-                                return response;
+                                while (true)
+                                {
+                                    cancellationToken.ThrowIfCancellationRequested();
+                                }
                             }
                         };
                     });
@@ -39,8 +40,8 @@ namespace Porthor.Tests
                     var resource = new Resource
                     {
                         Method = HttpMethod.Get,
-                        Path = "api/v6.1/data/{id}",
-                        EndpointUrl = "http://example.org/api/v6.1/samples/{id}"
+                        Path = "api/v7.1/data",
+                        EndpointUrl = "http://example.org/api/v7.1/data"
                     };
 
                     app.UsePorthor(new[] { resource });
@@ -48,18 +49,24 @@ namespace Porthor.Tests
             var server = new TestServer(builder);
 
             // Act
-            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "api/v6.1/data/10");
-            var responseMessage = await server.CreateClient().SendAsync(requestMessage);
+            Stopwatch sw = Stopwatch.StartNew();
+            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "api/v7.1/data");
+            var httpClient = server.CreateClient();
+            httpClient.Timeout = TimeSpan.FromMinutes(5);
+            var responseMessage = await httpClient.SendAsync(requestMessage);
+            sw.Stop();
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, responseMessage.StatusCode);
+            Assert.Equal(HttpStatusCode.GatewayTimeout, responseMessage.StatusCode);
+            Assert.Equal(100, sw.Elapsed.TotalSeconds, 0);
         }
 
-        [Fact]
-        public async Task Request_WithEnvironmentVariable_ReturnsOk()
+        [Theory]
+        [InlineData(30)]
+        [InlineData(120)]
+        public async Task Request_WaitForTimeout_ReturnsGatewayTimeout(int timeout)
         {
             // Arrange
-            IConfiguration appConfig = null;
             var builder = new WebHostBuilder()
                 .ConfigureServices(services =>
                 {
@@ -69,12 +76,12 @@ namespace Porthor.Tests
                         {
                             Sender = (request, cancellationToken) =>
                             {
-                                Assert.Equal("http://example.org/api/v6.2/data", request.RequestUri.ToString());
-                                var response = new HttpResponseMessage(HttpStatusCode.OK);
-                                return response;
+                                while (true)
+                                {
+                                    cancellationToken.ThrowIfCancellationRequested();
+                                }
                             }
                         };
-                        options.Configuration = appConfig;
                     });
                 })
                 .Configure(app =>
@@ -82,30 +89,26 @@ namespace Porthor.Tests
                     var resource = new Resource
                     {
                         Method = HttpMethod.Get,
-                        Path = "api/v6.2/data",
-                        EndpointUrl = "http://[DOMAIN]/api/v6.2/data"
+                        Path = "api/v7.2/data",
+                        EndpointUrl = "http://example.org/api/v7.1/data",
+                        Timeout = timeout
                     };
 
                     app.UsePorthor(new[] { resource });
-                })
-                .ConfigureAppConfiguration(config =>
-                {
-                    var defaults = new Dictionary<string, string>
-                    {
-                        {"DOMAIN", "example.org"}
-                    };
-                    config.AddInMemoryCollection(defaults);
-
-                    appConfig = config.Build();
                 });
             var server = new TestServer(builder);
 
             // Act
-            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "api/v6.2/data");
-            var responseMessage = await server.CreateClient().SendAsync(requestMessage);
+            Stopwatch sw = Stopwatch.StartNew();
+            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "api/v7.2/data");
+            var httpClient = server.CreateClient();
+            httpClient.Timeout = TimeSpan.FromMinutes(5);
+            var responseMessage = await httpClient.SendAsync(requestMessage);
+            sw.Stop();
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, responseMessage.StatusCode);
+            Assert.Equal(HttpStatusCode.GatewayTimeout, responseMessage.StatusCode);
+            Assert.Equal(timeout, sw.Elapsed.TotalSeconds, 0);
         }
     }
 }

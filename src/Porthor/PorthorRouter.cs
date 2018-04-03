@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Porthor.EndpointUri;
 using Porthor.Models;
 using Porthor.ResourceRequestValidators;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -93,6 +94,7 @@ namespace Porthor
                 var resourceHandler = new ResourceHandler(
                     validators,
                     EndpointUriBuilder.Initialize(resource.EndpointUrl, _options.Configuration),
+                    resource.Timeout.HasValue ? TimeSpan.FromSeconds(resource.Timeout.Value) : (TimeSpan?)null,
                     _options.BackChannelMessageHandler);
                 var route = new Route(
                     new RouteHandler(resourceHandler.HandleRequestAsync),

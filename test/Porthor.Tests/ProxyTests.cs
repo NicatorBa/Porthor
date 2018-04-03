@@ -29,7 +29,7 @@ namespace Porthor.Tests
                     {
                         options.BackChannelMessageHandler = new TestMessageHandler
                         {
-                            Sender = request =>
+                            Sender = (request, cancellationToken) =>
                             {
                                 Assert.Equal($"http://example.org/{path}", request.RequestUri.ToString());
                                 var response = new HttpResponseMessage(HttpStatusCode.OK);
@@ -79,7 +79,7 @@ namespace Porthor.Tests
                     {
                         options.BackChannelMessageHandler = new TestMessageHandler
                         {
-                            Sender = request =>
+                            Sender = (request, cancellationToken) =>
                             {
                                 Assert.Equal($"http://example.org/{path}", request.RequestUri.ToString());
                                 var response = new HttpResponseMessage(HttpStatusCode.OK);

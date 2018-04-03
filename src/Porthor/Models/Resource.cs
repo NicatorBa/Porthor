@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 
 namespace Porthor.Models
@@ -31,6 +32,23 @@ namespace Porthor.Models
         /// resource.Path = "api/v1/samples";
         /// </example>
         public string Path { get; set; }
+
+        private int? _timeout;
+        /// <summary>
+        /// The time in seconds to wait before the request times out.
+        /// </summary>
+        public int? Timeout
+        {
+            get { return _timeout; }
+            set
+            {
+                if (value <= 0 || value * 1000 > int.MaxValue)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                }
+                _timeout = value;
+            }
+        }
 
         /// <summary>
         /// Authentication and authorization settings for this resource.
