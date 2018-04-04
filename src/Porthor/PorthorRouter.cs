@@ -91,10 +91,13 @@ namespace Porthor
                     validators.Add(new ContentDefinitionValidator(resource.ContentDefinitions, _options.Content));
                 }
 
+                EndpointUriBuilder endpointUriBuilder = EndpointUriBuilder.Initialize(resource.EndpointUrl, _options.Configuration);
+                TimeSpan? timeout = resource.Timeout.HasValue ? TimeSpan.FromSeconds(resource.Timeout.Value) : (TimeSpan?)null;
+
                 var resourceHandler = new ResourceHandler(
                     validators,
-                    EndpointUriBuilder.Initialize(resource.EndpointUrl, _options.Configuration),
-                    resource.Timeout.HasValue ? TimeSpan.FromSeconds(resource.Timeout.Value) : (TimeSpan?)null,
+                    endpointUriBuilder,
+                    timeout,
                     _options.BackChannelMessageHandler);
                 var route = new Route(
                     new RouteHandler(resourceHandler.HandleRequestAsync),

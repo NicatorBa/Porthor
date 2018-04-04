@@ -35,7 +35,7 @@ namespace Porthor.Models
 
         private int? _timeout;
         /// <summary>
-        /// The time in seconds to wait before the request times out.
+        /// The time in seconds to wait before the request times out. Default is 100s.
         /// </summary>
         public int? Timeout
         {
