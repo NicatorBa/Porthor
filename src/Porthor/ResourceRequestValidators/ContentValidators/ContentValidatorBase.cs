@@ -13,7 +13,7 @@ namespace Porthor.ResourceRequestValidators.ContentValidators
         /// Constructs a new instance of <see cref="ContentValidatorBase"/>.
         /// </summary>
         /// <param name="template"></param>
-        public ContentValidatorBase(string template)
+        protected ContentValidatorBase(string template)
         { }
 
         /// <summary>

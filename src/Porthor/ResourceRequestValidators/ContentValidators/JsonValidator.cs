@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using NJsonSchema;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -34,7 +35,7 @@ namespace Porthor.ResourceRequestValidators.ContentValidators
         public override async Task<HttpResponseMessage> ValidateAsync(HttpContext context)
         {
             var errors = _schema.Validate(await StreamToString(context.Request.Body));
-            if (errors.Count > 0)
+            if (errors.Any())
             {
                 return new HttpResponseMessage(HttpStatusCode.BadRequest);
             }

@@ -46,8 +46,8 @@ namespace Porthor.ResourceRequestValidators
                     .Select(p => p.Key);
             }
 
-            if (missingQueryParameters.Count() > 0 ||
-                (unsupportedQueryParameters != null && unsupportedQueryParameters.Count() > 0))
+            if (missingQueryParameters.Any() ||
+                (unsupportedQueryParameters != null && unsupportedQueryParameters.Any()))
             {
                 var responseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
                 return Task.FromResult(responseMessage);

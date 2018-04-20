@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Porthor.EndpointUri;
 using Porthor.Models;
 using Porthor.ResourceRequestValidators;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -90,9 +91,13 @@ namespace Porthor
                     validators.Add(new ContentDefinitionValidator(resource.ContentDefinitions, _options.Content));
                 }
 
+                EndpointUriBuilder endpointUriBuilder = EndpointUriBuilder.Initialize(resource.EndpointUrl, _options.Configuration);
+                TimeSpan? timeout = resource.Timeout.HasValue ? TimeSpan.FromSeconds(resource.Timeout.Value) : (TimeSpan?)null;
+
                 var resourceHandler = new ResourceHandler(
                     validators,
-                    EndpointUriBuilder.Initialize(resource.EndpointUrl, _options.Configuration),
+                    endpointUriBuilder,
+                    timeout,
                     _options.BackChannelMessageHandler);
                 var route = new Route(
                     new RouteHandler(resourceHandler.HandleRequestAsync),

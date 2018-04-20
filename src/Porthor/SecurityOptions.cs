@@ -8,11 +8,11 @@
         /// <summary>
         /// Flag indicating whether authentication validations should be used.
         /// </summary>
-        public bool AuthenticationValidationEnabled { get; set; } = false;
+        public bool AuthenticationValidationEnabled { get; set; }
 
         /// <summary>
         /// Flag indicating whether authorization validations should be used.
         /// </summary>
-        public bool AuthorizationValidationEnabled { get; set; } = false;
+        public bool AuthorizationValidationEnabled { get; set; }
     }
 }

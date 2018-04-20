@@ -4,6 +4,7 @@ using Porthor.ResourceRequestValidators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -14,7 +15,7 @@ namespace Porthor
     /// </summary>
     public class ResourceHandler
     {
-        private const string _transferEncodingHeader = "transfer-encoding";
+        private const string TransferEncodingHeader = "transfer-encoding";
 
         private readonly IEnumerable<IResourceRequestValidator> _validators;
         private readonly EndpointUriBuilder _uriBuilder;
@@ -25,15 +26,21 @@ namespace Porthor
         /// </summary>
         /// <param name="validators">Collection of validators.</param>
         /// <param name="uriBuilder">Builder for endpoint uri.</param>
+        /// <param name="timeout">The timespan to wait before the request times out.</param>
         /// <param name="httpMessageHandler">Message handler for HTTP.</param>
         public ResourceHandler(
             IEnumerable<IResourceRequestValidator> validators,
             EndpointUriBuilder uriBuilder,
+            TimeSpan? timeout = null,
             HttpMessageHandler httpMessageHandler = null)
         {
             _validators = validators;
             _uriBuilder = uriBuilder;
             _httpClient = new HttpClient(httpMessageHandler ?? new HttpClientHandler());
+            if (timeout.HasValue)
+            {
+                _httpClient.Timeout = timeout.Value;
+            }
         }
 
         /// <summary>
@@ -64,7 +71,7 @@ namespace Porthor
 
             foreach (var header in context.Request.Headers)
             {
-                if (!requestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray()) && requestMessage.Content != null)
+                if (!requestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray()))
                 {
                     requestMessage.Content?.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray());
                 }
@@ -74,9 +81,16 @@ namespace Porthor
             requestMessage.Headers.Host = uri.Host;
             requestMessage.RequestUri = uri;
             requestMessage.Method = new HttpMethod(requestMethod);
-            using (var responseMessage = await _httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, context.RequestAborted))
+            try
             {
-                await SendResponse(context, responseMessage);
+                using (var responseMessage = await _httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, context.RequestAborted))
+                {
+                    await SendResponse(context, responseMessage);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                await SendResponse(context, new HttpResponseMessage(HttpStatusCode.GatewayTimeout));
             }
         }
 
@@ -95,7 +109,7 @@ namespace Porthor
                 }
             }
 
-            context.Response.Headers.Remove(_transferEncodingHeader);
+            context.Response.Headers.Remove(TransferEncodingHeader);
             if (responseMessage.Content != null)
             {
                 await responseMessage.Content.CopyToAsync(context.Response.Body);

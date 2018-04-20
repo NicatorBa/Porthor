@@ -29,7 +29,7 @@ namespace Porthor.Tests
                     {
                         options.BackChannelMessageHandler = new TestMessageHandler
                         {
-                            Sender = request =>
+                            Sender = (request, cancellationToken) =>
                             {
                                 Assert.Equal($"http://example.org/{path}", request.RequestUri.ToString());
                                 var response = new HttpResponseMessage(HttpStatusCode.OK);
@@ -62,8 +62,7 @@ namespace Porthor.Tests
             var responseContent = responseMessage.Content.ReadAsStringAsync();
             Assert.True(responseContent.Wait(3000) && !responseContent.IsFaulted);
             Assert.Equal("Response Body", responseContent.Result);
-            IEnumerable<string> testHeaderValue;
-            responseMessage.Headers.TryGetValues("testHeader", out testHeaderValue);
+            responseMessage.Headers.TryGetValues("testHeader", out IEnumerable<string> testHeaderValue);
             Assert.Equal("testHeaderValue", testHeaderValue.Single());
         }
 
@@ -80,7 +79,7 @@ namespace Porthor.Tests
                     {
                         options.BackChannelMessageHandler = new TestMessageHandler
                         {
-                            Sender = request =>
+                            Sender = (request, cancellationToken) =>
                             {
                                 Assert.Equal($"http://example.org/{path}", request.RequestUri.ToString());
                                 var response = new HttpResponseMessage(HttpStatusCode.OK);
@@ -107,8 +106,10 @@ namespace Porthor.Tests
             var server = new TestServer(builder);
 
             // Act
-            var requestMessage = new HttpRequestMessage(new HttpMethod(method), path);
-            requestMessage.Content = new StringContent("Request Body");
+            var requestMessage = new HttpRequestMessage(new HttpMethod(method), path)
+            {
+                Content = new StringContent("Request Body")
+            };
             var responseMessage = await server.CreateClient().SendAsync(requestMessage);
 
             // Assert
