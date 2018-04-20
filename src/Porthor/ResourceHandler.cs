@@ -15,7 +15,7 @@ namespace Porthor
     /// </summary>
     public class ResourceHandler
     {
-        private const string _transferEncodingHeader = "transfer-encoding";
+        private const string TransferEncodingHeader = "transfer-encoding";
 
         private readonly IEnumerable<IResourceRequestValidator> _validators;
         private readonly EndpointUriBuilder _uriBuilder;
@@ -71,7 +71,7 @@ namespace Porthor
 
             foreach (var header in context.Request.Headers)
             {
-                if (!requestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray()) && requestMessage.Content != null)
+                if (!requestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray()))
                 {
                     requestMessage.Content?.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray());
                 }
@@ -109,7 +109,7 @@ namespace Porthor
                 }
             }
 
-            context.Response.Headers.Remove(_transferEncodingHeader);
+            context.Response.Headers.Remove(TransferEncodingHeader);
             if (responseMessage.Content != null)
             {
                 await responseMessage.Content.CopyToAsync(context.Response.Body);

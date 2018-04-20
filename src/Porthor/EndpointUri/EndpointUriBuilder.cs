@@ -34,10 +34,10 @@ namespace Porthor.EndpointUri
 
             var uriSections = new List<IEndpointUriSection>();
             string[] sections = splitRegex.Split(endpointUrl);
-            for (int i = 0; i < sections.Length; i++)
+            foreach (var section in sections)
             {
-                var envMatch = matchEnvRegex.Match(sections[i]);
-                var routeMatch = matchRouteRegex.Match(sections[i]);
+                var envMatch = matchEnvRegex.Match(section);
+                var routeMatch = matchRouteRegex.Match(section);
                 if (envMatch.Success)
                 {
                     if (config is null)
@@ -53,7 +53,7 @@ namespace Porthor.EndpointUri
                 }
                 else
                 {
-                    uriSections.Add(new EndpointUriSection(sections[i]));
+                    uriSections.Add(new EndpointUriSection(section));
                 }
             }
 

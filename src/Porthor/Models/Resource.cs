@@ -39,10 +39,10 @@ namespace Porthor.Models
         /// </summary>
         public int? Timeout
         {
-            get { return _timeout; }
+            get => _timeout;
             set
             {
-                if (value <= 0 || value * 1000 > int.MaxValue)
+                if (value <= 0 || value >= int.MaxValue / 1000)
                 {
                     throw new ArgumentOutOfRangeException(nameof(value));
                 }

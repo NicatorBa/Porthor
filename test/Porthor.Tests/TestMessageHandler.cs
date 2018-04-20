@@ -7,7 +7,7 @@ namespace Porthor.Tests
 {
     internal class TestMessageHandler : HttpMessageHandler
     {
-        public Func<HttpRequestMessage, CancellationToken, HttpResponseMessage> Sender { get; set; }
+        public Func<HttpRequestMessage, CancellationToken, HttpResponseMessage> Sender { private get; set; }
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {

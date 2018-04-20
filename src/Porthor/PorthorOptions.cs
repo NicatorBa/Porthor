@@ -21,16 +21,16 @@ namespace Porthor
         /// <summary>
         /// Flag that indicates whether the query string is to be validated.
         /// </summary>
-        public bool QueryStringValidationEnabled { get; set; } = false;
+        public bool QueryStringValidationEnabled { get; set; }
 
         /// <summary>
         /// Security configuration options.
         /// </summary>
-        public SecurityOptions Security { get; private set; } = new SecurityOptions();
+        public SecurityOptions Security { get; } = new SecurityOptions();
 
         /// <summary>
         /// Request content configuration options.
         /// </summary>
-        public ContentOptions Content { get; private set; } = new ContentOptions();
+        public ContentOptions Content { get; } = new ContentOptions();
     }
 }
