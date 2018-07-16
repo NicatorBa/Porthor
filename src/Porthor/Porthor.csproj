@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <Title>Porthor</Title>
     <Description>API gateway middleware for Asp.Net Core</Description>
     <Version>1.1.0</Version>

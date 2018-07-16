@@ -22,37 +22,34 @@ namespace Porthor.Tests
                 {
                     services.AddAuthorization(options =>
                     {
-                        options.AddPolicy("InvalidPolicy", policy =>
-                        policy.RequireAssertion(context => false));
+                        options.AddPolicy("InvalidPolicy", policy => policy.RequireAssertion(context => false));
                     });
 
-                    services.AddPorthor(options =>
-                    {
-                        options.Security.AuthorizationValidationEnabled = true;
-                    });
+                    services.AddPorthor()
+                        .EnableAuthorizationValidation();
                 })
                 .Configure(app =>
                 {
-                    var resource = new Resource
+                    var routingRule = new RoutingRule
                     {
-                        Method = HttpMethod.Get,
-                        Path = "api/v3.1/data",
-                        SecuritySettings = new SecuritySettings
+                        HttpMethod = HttpMethod.Get,
+                        FrontendPath = "api/values",
+                        BackendUrl = "http://example.org/api/values",
+                        Validations = new Validations
                         {
-                            Policies = new List<string>
+                            Authorization = new Models.Authorization
                             {
-                                "InvalidPolicy"
+                                Policies = new List<string> { "InvalidPolicy" }
                             }
-                        },
-                        EndpointUrl = "http://example.org/api/v3.1/data"
+                        }
                     };
 
-                    app.UsePorthor(new[] { resource });
+                    app.UsePorthor(new[] { routingRule });
                 });
             var server = new TestServer(builder);
 
             // Act
-            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "api/v3.1/data");
+            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "api/values");
             var responseMessage = await server.CreateClient().SendAsync(requestMessage);
 
             // Assert
@@ -60,7 +57,7 @@ namespace Porthor.Tests
         }
 
         [Fact]
-        public async Task Request_WithValidPolicy_ReturnsForbidden()
+        public async Task Request_WithValidPolicy_ReturnsOk()
         {
             // Arrange
             var builder = new WebHostBuilder()
@@ -68,45 +65,42 @@ namespace Porthor.Tests
                 {
                     services.AddAuthorization(options =>
                     {
-                        options.AddPolicy("ValidPolicy", policy =>
-                        policy.RequireAssertion(context => true));
+                        options.AddPolicy("ValidPolicy", policy => policy.RequireAssertion(context => true));
                     });
 
-                    services.AddPorthor(options =>
-                    {
-                        options.BackChannelMessageHandler = new TestMessageHandler
+                    services.AddPorthor()
+                        .AddMessageHandler(new TestMessageHandler
                         {
                             Sender = (request, cancellationToken) =>
                             {
                                 var response = new HttpResponseMessage(HttpStatusCode.OK);
                                 return response;
                             }
-                        };
-                        options.Security.AuthorizationValidationEnabled = true;
-                    });
+                        })
+                        .EnableAuthorizationValidation();
                 })
                 .Configure(app =>
                 {
-                    var resource = new Resource
+                    var routingRule = new RoutingRule
                     {
-                        Method = HttpMethod.Get,
-                        Path = "api/v3.2/data",
-                        SecuritySettings = new SecuritySettings
+                        HttpMethod = HttpMethod.Get,
+                        FrontendPath = "api/values",
+                        BackendUrl = "http://example.org/api/values",
+                        Validations = new Validations
                         {
-                            Policies = new List<string>
+                            Authorization = new Models.Authorization
                             {
-                                "ValidPolicy"
+                                Policies = new List<string> { "ValidPolicy" }
                             }
-                        },
-                        EndpointUrl = "http://example.org/api/v3.2/data"
+                        }
                     };
 
-                    app.UsePorthor(new[] { resource });
+                    app.UsePorthor(new[] { routingRule });
                 });
             var server = new TestServer(builder);
 
             // Act
-            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "api/v3.2/data");
+            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "api/values");
             var responseMessage = await server.CreateClient().SendAsync(requestMessage);
 
             // Assert

@@ -21,9 +21,8 @@ namespace Porthor.Tests
             var builder = new WebHostBuilder()
                 .ConfigureServices(services =>
                 {
-                    services.AddPorthor(options =>
-                    {
-                        options.BackChannelMessageHandler = new TestMessageHandler
+                    services.AddPorthor()
+                        .AddMessageHandler(new TestMessageHandler
                         {
                             Sender = (request, cancellationToken) =>
                             {
@@ -32,28 +31,27 @@ namespace Porthor.Tests
                                     cancellationToken.ThrowIfCancellationRequested();
                                 }
                             }
-                        };
-                    });
+                        });
                 })
                 .Configure(app =>
                 {
-                    var resource = new Resource
+                    var routingRule = new RoutingRule
                     {
-                        Method = HttpMethod.Get,
-                        Path = "api/v7.1/data",
-                        EndpointUrl = "http://example.org/api/v7.1/data"
+                        HttpMethod = HttpMethod.Get,
+                        FrontendPath = "api/values",
+                        BackendUrl = "http://example.org/api/values"
                     };
 
-                    app.UsePorthor(new[] { resource });
+                    app.UsePorthor(new[] { routingRule });
                 });
             var server = new TestServer(builder);
+            var client = server.CreateClient();
+            client.Timeout = TimeSpan.FromMinutes(5);
 
             // Act
-            Stopwatch sw = Stopwatch.StartNew();
-            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "api/v7.1/data");
-            var httpClient = server.CreateClient();
-            httpClient.Timeout = TimeSpan.FromMinutes(5);
-            var responseMessage = await httpClient.SendAsync(requestMessage);
+            var sw = Stopwatch.StartNew();
+            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "api/values");
+            var responseMessage = await client.SendAsync(requestMessage);
             sw.Stop();
 
             // Assert
@@ -70,9 +68,8 @@ namespace Porthor.Tests
             var builder = new WebHostBuilder()
                 .ConfigureServices(services =>
                 {
-                    services.AddPorthor(options =>
-                    {
-                        options.BackChannelMessageHandler = new TestMessageHandler
+                    services.AddPorthor()
+                        .AddMessageHandler(new TestMessageHandler
                         {
                             Sender = (request, cancellationToken) =>
                             {
@@ -81,29 +78,28 @@ namespace Porthor.Tests
                                     cancellationToken.ThrowIfCancellationRequested();
                                 }
                             }
-                        };
-                    });
+                        });
                 })
                 .Configure(app =>
                 {
-                    var resource = new Resource
+                    var routingRule = new RoutingRule
                     {
-                        Method = HttpMethod.Get,
-                        Path = "api/v7.2/data",
-                        EndpointUrl = "http://example.org/api/v7.1/data",
+                        HttpMethod = HttpMethod.Get,
+                        FrontendPath = "api/values",
+                        BackendUrl = "http://example.org/api/values",
                         Timeout = timeout
                     };
 
-                    app.UsePorthor(new[] { resource });
+                    app.UsePorthor(new[] { routingRule });
                 });
             var server = new TestServer(builder);
+            var client = server.CreateClient();
+            client.Timeout = TimeSpan.FromMinutes(5);
 
             // Act
-            Stopwatch sw = Stopwatch.StartNew();
-            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "api/v7.2/data");
-            var httpClient = server.CreateClient();
-            httpClient.Timeout = TimeSpan.FromMinutes(5);
-            var responseMessage = await httpClient.SendAsync(requestMessage);
+            var sw = Stopwatch.StartNew();
+            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "api/values");
+            var responseMessage = await client.SendAsync(requestMessage);
             sw.Stop();
 
             // Assert

@@ -21,40 +21,42 @@ public class Startup
     {
         // Register the Porthor services
         // with your gateway configuration
-        services.AddPorthor(options =>
-        {
-            // Activate query string checking
-            // Offers a more strict way to handle query params for resources
-            options.QueryStringValidationEnabled = true;
-
+        services.AddPorthor()
             // Enable checking if user is authenticated by default
             // Can be overridden for certain resources with their property `AllowAnonymous`
-            options.Security.AuthenticationValidationEnabled = true;
+            .EnableAuthenticationValidation()
 
             // Protect your API with policiy-based authorization
-            options.Security.AuthorizationValidationEnabled = true;
+            .EnableAuthorizationValidation()
 
-            // Enable content body validation for POST and PUT methods
-            options.Content.ValidationEnabled = true;
-            // Register content validator for specific media type
-            options.Content.Add<JsonValidator>("application/json");
+            // Activate query string checking
+            // Offers a more strict way to handle query params for resources
+            .EnableQueryStringValidation()
+
+			.ConfigureContentValidation(options =>
+			{
+				// Enable content body validation for POST and PUT methods
+				options.Enabled = true;
+				// Register content validator for specific media type
+				options.Add<JsonValidator>(MediaType.Application.Json);
+			});
         });
     }
 
     public void Configure(IApplicationBuilder app)
     {
         // Minimal configured resource
-        // Method: supported Http request method
-        // Path: your application api endpoint
-        // EndpointUrl: endpoint where the request is to be redirected
-        var sampleResource = new Resource {
-            Method = HttpMethod.Get,
-            Path = "api/samples",
-            EndpointUrl = "http://example.org/api/v1/samples"
+        // HttpMethod: supported Http request method
+        // FrontendPath: your application api endpoint
+        // BackendUrl: endpoint where the request is to be redirected
+        var routingRule = new RoutingRule {
+            HttpMethod = HttpMethod.Get,
+            FrontendPath = "api/samples",
+            BackendUrl = "http://example.org/api/v1/samples"
         }
 
         // Use Porthor with predefined resource
-        app.UsePorthor(new[] { sampleResource });
+        app.UsePorthor(new[] { routingRule });
     }
 }
 ```

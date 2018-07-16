@@ -1,7 +1,7 @@
 ﻿namespace Porthor.Models
 {
     /// <summary>
-    /// Single allowed query parameter.
+    /// A query parameter.
     /// </summary>
     public class QueryParameter
     {
