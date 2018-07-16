@@ -33,13 +33,13 @@ public class Startup
             // Offers a more strict way to handle query params for resources
             .EnableQueryStringValidation()
 
-			.ConfigureContentValidation(options =>
-			{
-				// Enable content body validation for POST and PUT methods
-				options.Enabled = true;
-				// Register content validator for specific media type
-				options.Add<JsonValidator>(MediaType.Application.Json);
-			});
+            .ConfigureContentValidation(options =>
+            {
+                // Enable content body validation for POST and PUT methods
+                options.Enabled = true;
+                // Register content validator for specific media type
+                options.Add<JsonValidator>(MediaType.Application.Json);
+            });
         });
     }
 
