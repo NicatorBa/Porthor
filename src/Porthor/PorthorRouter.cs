@@ -103,7 +103,7 @@ namespace Porthor
                     rule.Validations?.Contents != null &&
                     rule.Validations.Contents.Any())
                 {
-                    validators.Add(new ComplexContentValidator(_contentOptions, rule.Validations.Contents));
+                    validators.Add(new MediaTypeContentValidator(_contentOptions, rule.Validations.Contents));
                 }
 
                 var requestHandler = new RequestHandler(

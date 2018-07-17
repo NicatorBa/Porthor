@@ -11,18 +11,18 @@ using System.Threading.Tasks;
 namespace Porthor.Validation
 {
     /// <summary>
-    /// Validator for request content.
+    /// Validator for request content by media type.
     /// </summary>
-    public class ComplexContentValidator : IValidator
+    public class MediaTypeContentValidator : IValidator
     {
         private readonly IDictionary<string, ContentValidator> _validators = new Dictionary<string, ContentValidator>();
 
         /// <summary>
-        /// Creates a new instance of <see cref="ComplexContentValidator"/>.
+        /// Creates a new instance of <see cref="MediaTypeContentValidator"/>.
         /// </summary>
         /// <param name="options">Content options.</param>
         /// <param name="contents">Settings for content.</param>
-        public ComplexContentValidator(
+        public MediaTypeContentValidator(
             ContentOptions options,
             Contents contents)
         {
