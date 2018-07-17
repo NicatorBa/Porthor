@@ -39,6 +39,7 @@ public class Startup
                 options.Enabled = true;
                 // Register content validator for specific media type
                 options.Add<JsonValidator>(MediaType.Application.Json);
+                options.Add<XmlValidator>(MediaType.Application.Xml);
             });
         });
     }
@@ -63,6 +64,6 @@ public class Startup
 
 ## Roadmap
 
-- [ ] Build in XML schema validation
+- [ ] Transformation of JSON on request/response
 - [ ] Web UI to register, update and delete resource routes
 - [ ] Wiki & API documentation
