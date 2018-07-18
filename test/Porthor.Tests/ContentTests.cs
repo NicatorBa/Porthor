@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Porthor.Constants;
 using Porthor.Models;
 using Porthor.Validation.Content;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -33,9 +34,9 @@ namespace Porthor.Tests
                         HttpMethod = HttpMethod.Get,
                         FrontendPath = "api/values",
                         BackendUrl = "http://example.org/api/values",
-                        Validations = new Validations
+                        ValidationSettings = new ValidationSettings
                         {
-                            Contents = new Contents
+                            Contents = new List<Content>
                             {
                                 new Content{ MediaType = MediaType.Application.Json }
                             }
@@ -82,9 +83,9 @@ namespace Porthor.Tests
                         HttpMethod = HttpMethod.Get,
                         FrontendPath = "api/values",
                         BackendUrl = "http://example.org/api/values",
-                        Validations = new Validations
+                        ValidationSettings = new ValidationSettings
                         {
-                            Contents = new Contents
+                            Contents = new List<Content>
                             {
                                 new Content{ MediaType = MediaType.Application.Json }
                             }
@@ -127,9 +128,9 @@ namespace Porthor.Tests
                         HttpMethod = HttpMethod.Get,
                         FrontendPath = "api/values",
                         BackendUrl = "http://example.org/api/values",
-                        Validations = new Validations
+                        ValidationSettings = new ValidationSettings
                         {
-                            Contents = new Contents
+                            Contents = new List<Content>
                             {
                                 new Content
                                 {
@@ -184,9 +185,9 @@ namespace Porthor.Tests
                         HttpMethod = HttpMethod.Get,
                         FrontendPath = "api/values",
                         BackendUrl = "http://example.org/api/values",
-                        Validations = new Validations
+                        ValidationSettings = new ValidationSettings
                         {
-                            Contents = new Contents
+                            Contents = new List<Content>
                             {
                                 new Content
                                 {
@@ -233,9 +234,9 @@ namespace Porthor.Tests
                         HttpMethod = HttpMethod.Get,
                         FrontendPath = "api/values",
                         BackendUrl = "http://example.org/api/values",
-                        Validations = new Validations
+                        ValidationSettings = new ValidationSettings
                         {
-                            Contents = new Contents
+                            Contents = new List<Content>
                             {
                                 new Content
                                 {
@@ -291,9 +292,9 @@ namespace Porthor.Tests
                         HttpMethod = HttpMethod.Get,
                         FrontendPath = "api/values",
                         BackendUrl = "http://example.org/api/values",
-                        Validations = new Validations
+                        ValidationSettings = new ValidationSettings
                         {
-                            Contents = new Contents
+                            Contents = new List<Content>
                             {
                                 new Content
                                 {

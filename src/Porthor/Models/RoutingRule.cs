@@ -44,6 +44,6 @@ namespace Porthor.Models
         /// <summary>
         /// Validation settings.
         /// </summary>
-        public Validations Validations { get; set; }
+        public ValidationSettings ValidationSettings { get; set; }
     }
 }

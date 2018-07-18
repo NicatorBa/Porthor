@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Porthor.Configuration;
-using Porthor.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -24,7 +23,7 @@ namespace Porthor.Validation
         /// <param name="contents">Settings for content.</param>
         public MediaTypeContentValidator(
             ContentOptions options,
-            Contents contents)
+            IEnumerable<Models.Content> contents)
         {
             foreach (var content in contents)
             {

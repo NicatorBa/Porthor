@@ -1,9 +1,11 @@
-﻿namespace Porthor.Models
+﻿using System.Collections.Generic;
+
+namespace Porthor.Models
 {
     /// <summary>
     /// Validation settings for a route.
     /// </summary>
-    public class Validations
+    public class ValidationSettings
     {
         /// <summary>
         /// Authentication settings.
@@ -21,8 +23,8 @@
         public QueryString QueryString { get; set; }
 
         /// <summary>
-        /// Content settings.
+        /// Content settings collection.
         /// </summary>
-        public Contents Contents { get; set; }
+        public IEnumerable<Content> Contents { get; set; }
     }
 }

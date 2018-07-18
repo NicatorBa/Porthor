@@ -69,7 +69,7 @@ namespace Porthor.Tests
                         HttpMethod = HttpMethod.Get,
                         FrontendPath = "api/values",
                         BackendUrl = "http://example.org/api/values",
-                        Validations = new Validations
+                        ValidationSettings = new ValidationSettings
                         {
                             Authentication = new Authentication
                             {

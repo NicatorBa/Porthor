@@ -79,31 +79,31 @@ namespace Porthor
                 var validators = new List<IValidator>();
 
                 if (_authenticationOptions.Enabled &&
-                    (rule.Validations?.Authentication == null ||
-                    !rule.Validations.Authentication.AllowAnonymous))
+                    (rule.ValidationSettings?.Authentication == null ||
+                    !rule.ValidationSettings.Authentication.AllowAnonymous))
                 {
                     validators.Add(new AuthenticationValidator());
                 }
 
                 if (_authorizationOptions.Enabled &&
-                    rule.Validations?.Authorization?.Policies != null)
+                    rule.ValidationSettings?.Authorization?.Policies != null)
                 {
-                    validators.Add(new AuthorizationValidator(rule.Validations.Authorization.Policies));
+                    validators.Add(new AuthorizationValidator(rule.ValidationSettings.Authorization.Policies));
                 }
 
                 if (_queryStringOptions.Enabled)
                 {
-                    var queryString = rule.Validations?.QueryString ?? new QueryString();
+                    var queryString = rule.ValidationSettings?.QueryString ?? new QueryString();
                     queryString.QueryParameters = queryString.QueryParameters ?? new QueryParameter[] { };
 
                     validators.Add(new QueryStringValidator(queryString));
                 }
 
                 if (_contentOptions.Enabled &&
-                    rule.Validations?.Contents != null &&
-                    rule.Validations.Contents.Any())
+                    rule.ValidationSettings?.Contents != null &&
+                    rule.ValidationSettings.Contents.Any())
                 {
-                    validators.Add(new MediaTypeContentValidator(_contentOptions, rule.Validations.Contents));
+                    validators.Add(new MediaTypeContentValidator(_contentOptions, rule.ValidationSettings.Contents));
                 }
 
                 var requestHandler = new RequestHandler(
