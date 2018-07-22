@@ -26,7 +26,7 @@ namespace Porthor.Tests
                     });
 
                     services.AddPorthor()
-                        .EnableAuthorizationValidation();
+                        .AddAuthorizationValidation();
                 })
                 .Configure(app =>
                 {
@@ -77,7 +77,7 @@ namespace Porthor.Tests
                                 return response;
                             }
                         })
-                        .EnableAuthorizationValidation();
+                        .AddAuthorizationValidation();
                 })
                 .Configure(app =>
                 {

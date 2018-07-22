@@ -42,11 +42,11 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         /// <summary>
-        /// Enable the validation for authentication.
+        /// Add the validation for authentication.
         /// </summary>
         /// <param name="enabled">A value indicating whether the validation is enabled.</param>
         /// <returns>Helper for configuring gateway services.</returns>
-        public IPorthorBuilder EnableAuthenticationValidation(bool enabled = true)
+        public IPorthorBuilder AddAuthenticationValidation(bool enabled = true)
         {
             Services.Configure<AuthenticationOptions>(options => options.Enabled = enabled);
 
@@ -54,11 +54,11 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         /// <summary>
-        /// Enable the validation for authorization.
+        /// Add the validation for authorization.
         /// </summary>
         /// <param name="enabled">A value indicating whether the validation is enabled.</param>
         /// <returns>Helper for configuring gateway services.</returns>
-        public IPorthorBuilder EnableAuthorizationValidation(bool enabled = true)
+        public IPorthorBuilder AddAuthorizationValidation(bool enabled = true)
         {
             Services.Configure<AuthorizationOptions>(options => options.Enabled = enabled);
 
@@ -66,11 +66,11 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         /// <summary>
-        /// Enable the validation of query strings.
+        /// Add the validation of query strings.
         /// </summary>
         /// <param name="enabled">A value indicating whether the validation is enabled.</param>
         /// <returns>Helper for configuring gateway services.</returns>
-        public IPorthorBuilder EnableQueryStringValidation(bool enabled = true)
+        public IPorthorBuilder AddQueryStringValidation(bool enabled = true)
         {
             Services.Configure<QueryStringOptions>(options => options.Enabled = enabled);
 
@@ -78,11 +78,11 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         /// <summary>
-        /// Configure the validation of content.
+        /// Add the validation of content.
         /// </summary>
         /// <param name="options">The action used to configure the content options.</param>
         /// <returns>Helper for configuring gateway services.</returns>
-        public IPorthorBuilder ConfigureContentValidation(Action<ContentOptions> options)
+        public IPorthorBuilder AddContentValidation(Action<ContentOptions> options)
         {
             Services.Configure(options);
 

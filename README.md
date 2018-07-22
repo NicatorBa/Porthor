@@ -24,16 +24,16 @@ public class Startup
         services.AddPorthor()
             // Enable checking if user is authenticated by default
             // Can be overridden for certain resources with their property `AllowAnonymous`
-            .EnableAuthenticationValidation()
+            .AddAuthenticationValidation()
 
             // Protect your API with policiy-based authorization
-            .EnableAuthorizationValidation()
+            .AddAuthorizationValidation()
 
             // Activate query string checking
             // Offers a more strict way to handle query params for resources
-            .EnableQueryStringValidation()
+            .AddQueryStringValidation()
 
-            .ConfigureContentValidation(options =>
+            .AddContentValidation(options =>
             {
                 // Enable content body validation for POST and PUT methods
                 options.Enabled = true;

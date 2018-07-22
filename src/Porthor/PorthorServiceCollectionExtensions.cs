@@ -18,10 +18,10 @@ namespace Microsoft.Extensions.DependencyInjection
 
             builder
                 .AddMessageHandler(new HttpClientHandler())
-                .EnableAuthenticationValidation(false)
-                .EnableAuthorizationValidation(false)
-                .EnableQueryStringValidation(false)
-                .ConfigureContentValidation(options => options.Enabled = false);
+                .AddAuthenticationValidation(false)
+                .AddAuthorizationValidation(false)
+                .AddQueryStringValidation(false)
+                .AddContentValidation(options => options.Enabled = false);
 
             return builder;
         }

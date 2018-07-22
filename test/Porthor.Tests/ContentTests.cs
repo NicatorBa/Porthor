@@ -25,7 +25,7 @@ namespace Porthor.Tests
                 .ConfigureServices(services =>
                 {
                     services.AddPorthor()
-                        .ConfigureContentValidation(options => options.Enabled = true);
+                        .AddContentValidation(options => options.Enabled = true);
                 })
                 .Configure(app =>
                 {
@@ -74,7 +74,7 @@ namespace Porthor.Tests
                                 return response;
                             }
                         })
-                        .ConfigureContentValidation(options => options.Enabled = true);
+                        .AddContentValidation(options => options.Enabled = true);
                 })
                 .Configure(app =>
                 {
@@ -115,7 +115,7 @@ namespace Porthor.Tests
                 .ConfigureServices(services =>
                 {
                     services.AddPorthor()
-                        .ConfigureContentValidation(options =>
+                        .AddContentValidation(options =>
                         {
                             options.Enabled = true;
                             options.Add<JsonValidator>(MediaType.Application.Json);
@@ -172,7 +172,7 @@ namespace Porthor.Tests
                                 return response;
                             }
                         })
-                        .ConfigureContentValidation(options =>
+                        .AddContentValidation(options =>
                         {
                             options.Enabled = true;
                             options.Add<JsonValidator>(MediaType.Application.Json);
@@ -221,7 +221,7 @@ namespace Porthor.Tests
                 .ConfigureServices(services =>
                 {
                     services.AddPorthor()
-                        .ConfigureContentValidation(options =>
+                        .AddContentValidation(options =>
                         {
                             options.Enabled = true;
                             options.Add<XmlValidator>(MediaType.Application.Xml);
@@ -279,7 +279,7 @@ namespace Porthor.Tests
                                 return response;
                             }
                         })
-                        .ConfigureContentValidation(options =>
+                        .AddContentValidation(options =>
                         {
                             options.Enabled = true;
                             options.Add<XmlValidator>(MediaType.Application.Xml);

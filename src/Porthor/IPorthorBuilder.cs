@@ -22,31 +22,31 @@ namespace Microsoft.Extensions.DependencyInjection
         IPorthorBuilder AddMessageHandler(HttpMessageHandler messageHandler);
 
         /// <summary>
-        /// Enable the validation for authentication.
+        /// Add the validation for authentication.
         /// </summary>
         /// <param name="enabled">A value indicating whether the validation is enabled.</param>
         /// <returns>Helper for configuring gateway services.</returns>
-        IPorthorBuilder EnableAuthenticationValidation(bool enabled = true);
+        IPorthorBuilder AddAuthenticationValidation(bool enabled = true);
 
         /// <summary>
-        /// Enable the validation for authorization.
+        /// Add the validation for authorization.
         /// </summary>
         /// <param name="enabled">A value indicating whether the validation is enabled.</param>
         /// <returns>Helper for configuring gateway services.</returns>
-        IPorthorBuilder EnableAuthorizationValidation(bool enabled = true);
+        IPorthorBuilder AddAuthorizationValidation(bool enabled = true);
 
         /// <summary>
-        /// Enable the validation of query strings.
+        /// Add the validation of query strings.
         /// </summary>
         /// <param name="enabled">A value indicating whether the validation is enabled.</param>
         /// <returns>Helper for configuring gateway services.</returns>
-        IPorthorBuilder EnableQueryStringValidation(bool enabled = true);
+        IPorthorBuilder AddQueryStringValidation(bool enabled = true);
 
         /// <summary>
-        /// Configure the validation of content.
+        /// Add the validation of content.
         /// </summary>
         /// <param name="options">The action used to configure the content options.</param>
         /// <returns>Helper for configuring gateway services.</returns>
-        IPorthorBuilder ConfigureContentValidation(Action<ContentOptions> options);
+        IPorthorBuilder AddContentValidation(Action<ContentOptions> options);
     }
 }

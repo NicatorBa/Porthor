@@ -21,7 +21,7 @@ namespace Porthor.Tests
                 .ConfigureServices(services =>
                 {
                     services.AddPorthor()
-                        .EnableQueryStringValidation();
+                        .AddQueryStringValidation();
                 })
                 .Configure(app =>
                 {
@@ -70,7 +70,7 @@ namespace Porthor.Tests
                                 return response;
                             }
                         })
-                        .EnableQueryStringValidation();
+                        .AddQueryStringValidation();
                 })
                 .Configure(app =>
                 {
@@ -111,7 +111,7 @@ namespace Porthor.Tests
                 .ConfigureServices(services =>
                 {
                     services.AddPorthor()
-                        .EnableQueryStringValidation();
+                        .AddQueryStringValidation();
                 })
                 .Configure(app =>
                 {
@@ -150,7 +150,7 @@ namespace Porthor.Tests
                                 return response;
                             }
                         })
-                        .EnableQueryStringValidation();
+                        .AddQueryStringValidation();
                 })
                 .Configure(app =>
                 {
@@ -199,7 +199,7 @@ namespace Porthor.Tests
                                 return response;
                             }
                         })
-                        .EnableQueryStringValidation();
+                        .AddQueryStringValidation();
                 })
                 .Configure(app =>
                 {
