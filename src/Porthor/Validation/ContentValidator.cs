@@ -20,7 +20,7 @@ namespace Porthor.Validation
         /// <summary>
         /// Validation schema for content.
         /// </summary>
-        protected string Schema { get; set; }
+        protected string Schema { get; }
 
         /// <summary>
         /// Validates the content of current <see cref="HttpContext"/>.

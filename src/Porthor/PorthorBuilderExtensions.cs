@@ -3,7 +3,6 @@ using Porthor;
 using Porthor.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Microsoft.AspNetCore.Builder
 {
@@ -46,10 +45,7 @@ namespace Microsoft.AspNetCore.Builder
                 throw new InvalidOperationException(nameof(IPorthorRouter));
             }
 
-            if (routingRules.Any())
-            {
-                router.InitializeAsync(routingRules).Wait();
-            }
+            router.InitializeAsync(routingRules).Wait();
 
             return app.UseMiddleware<PorthorMiddleware>();
         }

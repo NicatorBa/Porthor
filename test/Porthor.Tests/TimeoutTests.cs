@@ -26,10 +26,10 @@ namespace Porthor.Tests
                         {
                             Sender = (request, cancellationToken) =>
                             {
-                                while (true)
-                                {
-                                    cancellationToken.ThrowIfCancellationRequested();
-                                }
+                                while (!cancellationToken.IsCancellationRequested) { }
+                                cancellationToken.ThrowIfCancellationRequested();
+
+                                return new HttpResponseMessage();
                             }
                         });
                 })
@@ -73,10 +73,10 @@ namespace Porthor.Tests
                         {
                             Sender = (request, cancellationToken) =>
                             {
-                                while (true)
-                                {
-                                    cancellationToken.ThrowIfCancellationRequested();
-                                }
+                                while (!cancellationToken.IsCancellationRequested) { }
+                                cancellationToken.ThrowIfCancellationRequested();
+
+                                return new HttpResponseMessage();
                             }
                         });
                 })
