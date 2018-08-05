@@ -1,11 +1,15 @@
 ﻿using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Constraints;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Porthor.EndpointUri;
+using Porthor.Configuration;
+using Porthor.Internal;
 using Porthor.Models;
-using Porthor.ResourceRequestValidators;
+using Porthor.Validation;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Porthor
@@ -15,22 +19,114 @@ namespace Porthor
     /// </summary>
     public class PorthorRouter : IPorthorRouter
     {
-        private readonly IInlineConstraintResolver _contraintResolver;
-        private readonly PorthorOptions _options;
+        private readonly IInlineConstraintResolver _constraintResolver;
+        private readonly IConfiguration _configuration;
+        private readonly ILogger _logger;
+
+        private readonly MessageHandlerOptions _messageHandlerOptions;
+        private readonly AuthenticationOptions _authenticationOptions;
+        private readonly AuthorizationOptions _authorizationOptions;
+        private readonly QueryStringOptions _queryStringOptions;
+        private readonly ContentOptions _contentOptions;
+
         private IRouter _router;
 
         /// <summary>
         /// Constructs a new instance of <see cref="PorthorRouter"/>.
         /// </summary>
         /// <param name="constraintResolver">Resolver for inline constraints.</param>
-        /// <param name="options">Configuration options.</param>
+        /// <param name="configuration">Configuration of application properties.</param>
+        /// <param name="logger">Logger for <see cref="PorthorRouter"/>.</param>
+        /// <param name="messageHandlerOptionsAccessor">Accessor for message handler options.</param>
+        /// <param name="authenticationOptionsAccessor">Accessor for authentication options.</param>
+        /// <param name="authorizationOptionsAccessor">Accessor for authorization options.</param>
+        /// <param name="queryStringOptionsAccessor">Accessor for query string options.</param>
+        /// <param name="contentOptionsAccessor">Accessor for content options.</param>
         public PorthorRouter(
             IInlineConstraintResolver constraintResolver,
-            IOptions<PorthorOptions> options)
+            IConfiguration configuration,
+            ILogger<PorthorRouter> logger,
+            IOptions<MessageHandlerOptions> messageHandlerOptionsAccessor,
+            IOptions<AuthenticationOptions> authenticationOptionsAccessor,
+            IOptions<AuthorizationOptions> authorizationOptionsAccessor,
+            IOptions<QueryStringOptions> queryStringOptionsAccessor,
+            IOptions<ContentOptions> contentOptionsAccessor)
         {
-            _contraintResolver = constraintResolver;
-            _options = options.Value;
+            _constraintResolver = constraintResolver;
+            _configuration = configuration;
+            _logger = logger;
+
+            _messageHandlerOptions = messageHandlerOptionsAccessor.Value;
+            _authenticationOptions = authenticationOptionsAccessor.Value;
+            _authorizationOptions = authorizationOptionsAccessor.Value;
+            _queryStringOptions = queryStringOptionsAccessor.Value;
+            _contentOptions = contentOptionsAccessor.Value;
+
             _router = new RouteCollection();
+        }
+
+        /// <summary>
+        /// Initialize the router with the specified rules.
+        /// </summary>
+        /// <param name="rules">Collection of routing rules.</param>
+        /// <returns>The <see cref="Task"/> that represents the asynchronous initialization process.</returns>
+        public Task InitializeAsync(IEnumerable<RoutingRule> rules)
+        {
+            var routeCollection = new RouteCollection();
+
+            foreach (var rule in rules)
+            {
+                var validators = new List<IValidator>();
+
+                if (_authenticationOptions.Enabled &&
+                    (rule.ValidationSettings?.Authentication == null ||
+                    !rule.ValidationSettings.Authentication.AllowAnonymous))
+                {
+                    validators.Add(new AuthenticationValidator());
+                }
+
+                if (_authorizationOptions.Enabled &&
+                    rule.ValidationSettings?.Authorization?.Policies != null)
+                {
+                    validators.Add(new AuthorizationValidator(rule.ValidationSettings.Authorization.Policies));
+                }
+
+                if (_queryStringOptions.Enabled)
+                {
+                    var queryString = rule.ValidationSettings?.QueryString ?? new QueryString();
+                    queryString.QueryParameters = queryString.QueryParameters ?? new QueryParameter[] { };
+
+                    validators.Add(new QueryStringValidator(queryString));
+                }
+
+                if (_contentOptions.Enabled &&
+                    rule.ValidationSettings?.Contents != null &&
+                    rule.ValidationSettings.Contents.Any())
+                {
+                    validators.Add(new MediaTypeContentValidator(_contentOptions, rule.ValidationSettings.Contents));
+                }
+
+                var requestHandler = new RequestHandler(
+                    RequestUriBuilder.Initialize(rule.BackendUrl, _configuration),
+                    _messageHandlerOptions.MessageHandler,
+                    rule.Timeout.HasValue ? TimeSpan.FromSeconds(rule.Timeout.Value) : (TimeSpan?)null,
+                    validators);
+                var route = new Route(
+                    new RouteHandler(requestHandler.HandleAsync),
+                    rule.FrontendPath,
+                    null,
+                    new RouteValueDictionary(new { httpMethod = new HttpMethodRouteConstraint(rule.HttpMethod.Method) }),
+                    null,
+                    _constraintResolver);
+
+                routeCollection.Add(route);
+            }
+
+            _logger.LogInformation("Initialized router with {count} rules.", routeCollection.Count);
+
+            _router = routeCollection;
+
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -41,77 +137,6 @@ namespace Porthor
         public VirtualPathData GetVirtualPath(VirtualPathContext context)
         {
             return _router.GetVirtualPath(context);
-        }
-
-        /// <summary>
-        /// Initialize the router with the specified resources.
-        /// </summary>
-        /// <param name="resources">Collection of API resources.</param>
-        /// <returns>The <see cref="Task"/> that represents the asynchronous initialization process.</returns>
-        public Task Initialize(IEnumerable<Resource> resources)
-        {
-            var routeCollection = new RouteCollection();
-
-            foreach (var resource in resources)
-            {
-                var validators = new List<IResourceRequestValidator>();
-
-                if (_options.QueryStringValidationEnabled)
-                {
-                    if (resource.QueryParameterSettings == null)
-                    {
-                        resource.QueryParameterSettings = new QueryParameterSettings();
-                    }
-
-                    if (resource.QueryParameterSettings.QueryParameters == null)
-                    {
-                        resource.QueryParameterSettings.QueryParameters = new List<QueryParameter>();
-                    }
-
-                    validators.Add(new QueryParameterValidator(resource.QueryParameterSettings));
-                }
-
-                if (_options.Security.AuthenticationValidationEnabled &&
-                    (resource.SecuritySettings == null ||
-                    !resource.SecuritySettings.AllowAnonymous))
-                {
-                    validators.Add(new AuthenticationValidator());
-                }
-
-                if (_options.Security.AuthorizationValidationEnabled &&
-                    resource.SecuritySettings?.Policies != null)
-                {
-                    validators.Add(new AuthorizationValidator(resource.SecuritySettings.Policies));
-                }
-
-                if (_options.Content.ValidationEnabled &&
-                    resource.ContentDefinitions != null &&
-                    resource.ContentDefinitions.Count > 0)
-                {
-                    validators.Add(new ContentDefinitionValidator(resource.ContentDefinitions, _options.Content));
-                }
-
-                EndpointUriBuilder endpointUriBuilder = EndpointUriBuilder.Initialize(resource.EndpointUrl, _options.Configuration);
-                TimeSpan? timeout = resource.Timeout.HasValue ? TimeSpan.FromSeconds(resource.Timeout.Value) : (TimeSpan?)null;
-
-                var resourceHandler = new ResourceHandler(
-                    validators,
-                    endpointUriBuilder,
-                    timeout,
-                    _options.BackChannelMessageHandler);
-                var route = new Route(
-                    new RouteHandler(resourceHandler.HandleRequestAsync),
-                    resource.Path,
-                    null,
-                    new RouteValueDictionary(new { httpMethod = new HttpMethodRouteConstraint(resource.Method.Method) }),
-                    null,
-                    _contraintResolver);
-                routeCollection.Add(route);
-            }
-
-            _router = routeCollection;
-
-            return Task.CompletedTask;
         }
 
         /// <summary>

@@ -11,10 +11,10 @@ namespace Porthor
     public interface IPorthorRouter : IRouter
     {
         /// <summary>
-        /// Initialize the router with the specified resources.
+        /// Initialize the router with the specified routing rules.
         /// </summary>
-        /// <param name="resources">Collection of API resources.</param>
+        /// <param name="rules">Collection of routing rules.</param>
         /// <returns>The <see cref="Task"/> that represents the asynchronous initialization process.</returns>
-        Task Initialize(IEnumerable<Resource> resources);
+        Task InitializeAsync(IEnumerable<RoutingRule> rules);
     }
 }

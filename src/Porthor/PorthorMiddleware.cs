@@ -5,7 +5,7 @@ using Porthor;
 namespace Microsoft.AspNetCore.Builder
 {
     /// <summary>
-    /// A middleware that handle requests and route to the resources.
+    /// A middleware that handle requests and route to the backend APIs.
     /// </summary>
     public class PorthorMiddleware : RouterMiddleware
     {

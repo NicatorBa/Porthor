@@ -20,26 +20,24 @@ namespace Porthor.Tests
             var builder = new WebHostBuilder()
                 .ConfigureServices(services =>
                 {
-                    services.AddPorthor(options =>
-                    {
-                        options.Security.AuthenticationValidationEnabled = true;
-                    });
+                    services.AddPorthor()
+                        .AddAuthenticationValidation();
                 })
                 .Configure(app =>
                 {
-                    var resource = new Resource
+                    var routingRule = new RoutingRule
                     {
-                        Method = HttpMethod.Get,
-                        Path = "api/v2.1/data",
-                        EndpointUrl = "http://example.org/api/v2.1/data"
+                        HttpMethod = HttpMethod.Get,
+                        FrontendPath = "api/values",
+                        BackendUrl = "http://example.org/api/values"
                     };
 
-                    app.UsePorthor(new[] { resource });
+                    app.UsePorthor(new[] { routingRule });
                 });
             var server = new TestServer(builder);
 
             // Act
-            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "api/v2.1/data");
+            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "api/values");
             var responseMessage = await server.CreateClient().SendAsync(requestMessage);
 
             // Assert
@@ -53,38 +51,39 @@ namespace Porthor.Tests
             var builder = new WebHostBuilder()
                 .ConfigureServices(services =>
                 {
-                    services.AddPorthor(options =>
-                    {
-                        options.BackChannelMessageHandler = new TestMessageHandler
+                    services.AddPorthor()
+                        .AddMessageHandler(new TestMessageHandler
                         {
                             Sender = (request, cancellationToken) =>
                             {
                                 var response = new HttpResponseMessage(HttpStatusCode.OK);
                                 return response;
                             }
-                        };
-                        options.Security.AuthenticationValidationEnabled = true;
-                    });
+                        })
+                        .AddAuthenticationValidation();
                 })
                 .Configure(app =>
                 {
-                    var resource = new Resource
+                    var routingRule = new RoutingRule
                     {
-                        Method = HttpMethod.Get,
-                        Path = "api/v2.2/data",
-                        SecuritySettings = new SecuritySettings
+                        HttpMethod = HttpMethod.Get,
+                        FrontendPath = "api/values",
+                        BackendUrl = "http://example.org/api/values",
+                        ValidationSettings = new ValidationSettings
                         {
-                            AllowAnonymous = true
-                        },
-                        EndpointUrl = "http://example.org/api/v2.2/data"
+                            Authentication = new Authentication
+                            {
+                                AllowAnonymous = true
+                            }
+                        }
                     };
 
-                    app.UsePorthor(new[] { resource });
+                    app.UsePorthor(new[] { routingRule });
                 });
             var server = new TestServer(builder);
 
             // Act
-            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "api/v2.2/data");
+            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "api/values");
             var responseMessage = await server.CreateClient().SendAsync(requestMessage);
 
             // Assert
@@ -98,43 +97,42 @@ namespace Porthor.Tests
             var builder = new WebHostBuilder()
                 .ConfigureServices(services =>
                 {
-                    services.AddPorthor(options =>
-                    {
-                        options.BackChannelMessageHandler = new TestMessageHandler
+                    services.AddPorthor()
+                        .AddMessageHandler(new TestMessageHandler
                         {
                             Sender = (request, cancellationToken) =>
                             {
                                 var response = new HttpResponseMessage(HttpStatusCode.OK);
                                 return response;
                             }
-                        };
-                        options.Security.AuthenticationValidationEnabled = true;
-                    });
+                        })
+                        .AddAuthenticationValidation();
                 })
                 .Configure(app =>
                 {
                     app.Use((context, next) =>
                     {
-                        ClaimsIdentity identity = new ClaimsIdentity("TestCookieAuthentication");
-                        ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+                        var identity = new ClaimsIdentity("TestCookieAuthentication");
+                        var principal = new ClaimsPrincipal(identity);
+
                         context.User = principal;
 
                         return next();
                     });
 
-                    var resource = new Resource
+                    var routingRule = new RoutingRule
                     {
-                        Method = HttpMethod.Get,
-                        Path = "api/v2.3/data",
-                        EndpointUrl = "http://example.org/api/v2.3/data"
+                        HttpMethod = HttpMethod.Get,
+                        FrontendPath = "api/values",
+                        BackendUrl = "http://example.org/api/values"
                     };
 
-                    app.UsePorthor(new[] { resource });
+                    app.UsePorthor(new[] { routingRule });
                 });
             var server = new TestServer(builder);
 
             // Act
-            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "api/v2.3/data");
+            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "api/values");
             var responseMessage = await server.CreateClient().SendAsync(requestMessage);
 
             // Assert
