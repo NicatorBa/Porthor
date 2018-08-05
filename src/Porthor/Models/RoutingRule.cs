@@ -26,7 +26,7 @@ namespace Porthor.Models
             get => _timeout;
             set
             {
-                if (value <= 0 || value >= _maxTimeout)
+                if (value <= 0 || value >= MaxTimeout)
                 {
                     throw new ArgumentOutOfRangeException(nameof(Timeout));
                 }
@@ -34,7 +34,7 @@ namespace Porthor.Models
             }
         }
         private int? _timeout;
-        private const int _maxTimeout = int.MaxValue / 1000;
+        private const int MaxTimeout = int.MaxValue / 1000;
 
         /// <summary>
         /// Backend URL to which the request is sent.

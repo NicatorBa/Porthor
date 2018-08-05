@@ -10,11 +10,6 @@ namespace Microsoft.Extensions.DependencyInjection
     public interface IPorthorBuilder
     {
         /// <summary>
-        /// Gets the <see cref="IServiceCollection"/> services are attached to.
-        /// </summary>
-        IServiceCollection Services { get; }
-
-        /// <summary>
         /// Add a custom <see cref="HttpMessageHandler"/>.
         /// </summary>
         /// <param name="messageHandler">Customer <see cref="HttpMessageHandler"/>.</param>

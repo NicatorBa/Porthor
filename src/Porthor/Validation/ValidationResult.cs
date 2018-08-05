@@ -9,14 +9,13 @@ namespace Porthor.Validation
     /// </summary>
     public class ValidationResult
     {
-        private static readonly ValidationResult _success = new ValidationResult { Succeeded = true };
         private HttpResponseMessage _responseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
 
         /// <summary>
         /// Flag indicating whether if the validation succeeded or not.
         /// </summary>
         /// <value>True if the validation succeeded, otherwise false.</value>
-        public bool Succeeded { get; protected set; }
+        public bool Succeeded { get; private set; }
 
         /// <summary>
         /// The <see cref="HttpResponseMessage"/> which should be returned if the operation failed.
@@ -26,7 +25,7 @@ namespace Porthor.Validation
         /// <summary>
         /// Returns a <see cref="ValidationResult"/> indicating a successful validation operation.
         /// </summary>
-        public static ValidationResult Success => _success;
+        public static ValidationResult Success { get; } = new ValidationResult { Succeeded = true };
 
         /// <summary>
         /// Creates a <see cref="ValidationResult"/> indicating a failed validation operation.

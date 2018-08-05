@@ -122,6 +122,8 @@ namespace Porthor
                 routeCollection.Add(route);
             }
 
+            _logger.LogInformation("Initialized router with {count} rules.", routeCollection.Count);
+
             _router = routeCollection;
 
             return Task.CompletedTask;

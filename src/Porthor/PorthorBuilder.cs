@@ -27,7 +27,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <summary>
         /// Gets the <see cref="IServiceCollection"/> services are attached to.
         /// </summary>
-        public IServiceCollection Services { get; private set; }
+        private IServiceCollection Services { get; }
 
         /// <summary>
         /// Add a custom <see cref="HttpMessageHandler"/>.

@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Title>Porthor</Title>
     <Description>API gateway middleware for Asp.Net Core</Description>
-    <Version>1.1.0</Version>
+    <Version>2.0.0</Version>
     <Authors>NicatorBa</Authors>
     <PackageTags>aspnetcore;gateway;api</PackageTags>
     <PackageProjectUrl>https://github.com/NicatorBa/Porthor</PackageProjectUrl>
