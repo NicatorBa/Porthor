@@ -15,28 +15,13 @@ namespace Microsoft.AspNetCore.Builder
         /// Adds a <see cref="PorthorMiddleware"/> to the specified <see cref="IApplicationBuilder"/>.
         /// </summary>
         /// <param name="app">The <see cref="IApplicationBuilder"/> to add the middleware to.</param>
-        /// <returns>A reference to this instance after the operation has completed.</returns>
-        public static IApplicationBuilder UsePorthor(this IApplicationBuilder app)
-        {
-            return app.UsePorthor(new RoutingRule[] { });
-        }
-
-        /// <summary>
-        /// Adds a <see cref="PorthorMiddleware"/> to the specified <see cref="IApplicationBuilder"/>.
-        /// </summary>
-        /// <param name="app">The <see cref="IApplicationBuilder"/> to add the middleware to.</param>
         /// <param name="routingRules">Collection of routing rules to initialize startup routes.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
-        public static IApplicationBuilder UsePorthor(this IApplicationBuilder app, IEnumerable<RoutingRule> routingRules)
+        public static IApplicationBuilder UsePorthor(this IApplicationBuilder app, IEnumerable<RoutingRule> routingRules = null)
         {
             if (app == null)
             {
                 throw new ArgumentNullException(nameof(app));
-            }
-
-            if (routingRules == null)
-            {
-                throw new ArgumentNullException(nameof(routingRules));
             }
 
             var router = app.ApplicationServices.GetService<IPorthorRouter>();
@@ -45,7 +30,10 @@ namespace Microsoft.AspNetCore.Builder
                 throw new InvalidOperationException(nameof(IPorthorRouter));
             }
 
-            router.InitializeAsync(routingRules).Wait();
+            if (routingRules != null)
+            {
+                router.InitializeAsync(routingRules).Wait();
+            }
 
             return app.UseMiddleware<PorthorMiddleware>();
         }
