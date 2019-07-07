@@ -18,11 +18,7 @@ namespace Porthor.Internal
             _key = key;
         }
 
-        /// <summary>
-        /// Gets the part for the request uri.
-        /// </summary>
-        /// <param name="routeValues">Route values of current route.</param>
-        /// <returns>An uri part.</returns>
+        /// <inheritdoc />
         public string GetUriPart(RouteValueDictionary routeValues)
         {
             return routeValues[_key].ToString();

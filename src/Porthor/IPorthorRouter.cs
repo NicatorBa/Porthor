@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Routing;
-using Porthor.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Routing;
+using Porthor.Models;
 
 namespace Porthor
 {

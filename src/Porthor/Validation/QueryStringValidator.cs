@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Porthor.Validation
 {
@@ -23,11 +23,7 @@ namespace Porthor.Validation
             _queryString = queryString;
         }
 
-        /// <summary>
-        /// Validates the query string of the current <see cref="HttpContext"/>.
-        /// </summary>
-        /// <param name="context">Current context.</param>
-        /// <returns>The <see cref="Task{ValidationResult}"/> that represents the asynchronous validation process.</returns>
+        /// <inheritdoc />
         public Task<ValidationResult> ValidateAsync(HttpContext context)
         {
             var missingQueryParameters = _queryString.QueryParameters

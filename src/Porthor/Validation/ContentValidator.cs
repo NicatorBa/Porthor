@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Porthor.Validation
 {
@@ -22,11 +22,7 @@ namespace Porthor.Validation
         /// </summary>
         protected string Schema { get; }
 
-        /// <summary>
-        /// Validates the content of current <see cref="HttpContext"/>.
-        /// </summary>
-        /// <param name="context">Current context.</param>
-        /// <returns>The <see cref="Task{ValidationResult}"/> that represents the asynchronous validation process.</returns>
+        /// <inheritdoc />
         public abstract Task<ValidationResult> ValidateAsync(HttpContext context);
     }
 }

@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
+using Microsoft.AspNetCore.Http;
 
 namespace Porthor.Validation.Content
 {
@@ -24,11 +24,7 @@ namespace Porthor.Validation.Content
             _xmlSchema.Add(string.Empty, XmlReader.Create(new StringReader(Schema)));
         }
 
-        /// <summary>
-        /// Validates the xml of current <see cref="HttpContext"/>.
-        /// </summary>
-        /// <param name="context">Current context.</param>
-        /// <returns>The <see cref="Task{ValidationResult}"/> that represents the asynchronous validation process.</returns>
+        /// <inheritdoc />
         public override Task<ValidationResult> ValidateAsync(HttpContext context)
         {
             var errors = false;

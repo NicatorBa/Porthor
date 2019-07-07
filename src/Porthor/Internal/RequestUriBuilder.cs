@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Configuration;
 
 namespace Porthor.Internal
 {
@@ -75,7 +75,7 @@ namespace Porthor.Internal
             var builder = new StringBuilder();
 
             var routeValues = context.GetRouteData().Values;
-            for (int i = 0; i < _requestUriPartAccessors.Length; i++)
+            for (var i = 0; i < _requestUriPartAccessors.Length; i++)
             {
                 builder.Append(_requestUriPartAccessors[i].GetUriPart(routeValues));
             }

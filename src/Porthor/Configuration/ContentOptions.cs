@@ -1,7 +1,7 @@
-﻿using Porthor.Validation;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Porthor.Validation;
 
 namespace Porthor.Configuration
 {

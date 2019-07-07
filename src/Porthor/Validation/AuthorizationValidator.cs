@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Porthor.Validation
 {
@@ -23,11 +23,7 @@ namespace Porthor.Validation
             _policies = policies;
         }
 
-        /// <summary>
-        /// Validates that the user of the current <see cref="HttpContext"/> complies with at least one policy.
-        /// </summary>
-        /// <param name="context">Current context.</param>
-        /// <returns>The <see cref="Task{ValidationResult}"/> that represents the asynchronous validation process.</returns>
+        /// <inheritdoc />
         public async Task<ValidationResult> ValidateAsync(HttpContext context)
         {
             var authorizationService = context.RequestServices.GetRequiredService<IAuthorizationService>();

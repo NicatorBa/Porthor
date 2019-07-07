@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 using Porthor;
 using Porthor.Models;
-using System;
-using System.Collections.Generic;
 
 namespace Microsoft.AspNetCore.Builder
 {

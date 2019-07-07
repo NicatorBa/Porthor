@@ -1,6 +1,6 @@
-﻿using Porthor.Configuration;
-using System;
+﻿using System;
 using System.Net.Http;
+using Porthor.Configuration;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

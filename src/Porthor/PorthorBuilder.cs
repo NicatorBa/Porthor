@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Routing;
+﻿using System;
+using System.Net.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Porthor;
 using Porthor.Configuration;
-using System;
-using System.Net.Http;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -29,11 +29,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         private IServiceCollection Services { get; }
 
-        /// <summary>
-        /// Add a custom <see cref="HttpMessageHandler"/>.
-        /// </summary>
-        /// <param name="messageHandler">Customer <see cref="HttpMessageHandler"/>.</param>
-        /// <returns>Helper for configuring gateway services.</returns>
+        /// <inheritdoc />
         public IPorthorBuilder AddMessageHandler(HttpMessageHandler messageHandler)
         {
             Services.Configure<MessageHandlerOptions>(options => options.MessageHandler = messageHandler);
@@ -41,11 +37,7 @@ namespace Microsoft.Extensions.DependencyInjection
             return this;
         }
 
-        /// <summary>
-        /// Add the validation for authentication.
-        /// </summary>
-        /// <param name="enabled">A value indicating whether the validation is enabled.</param>
-        /// <returns>Helper for configuring gateway services.</returns>
+        /// <inheritdoc />
         public IPorthorBuilder AddAuthenticationValidation(bool enabled = true)
         {
             Services.Configure<AuthenticationOptions>(options => options.Enabled = enabled);
@@ -53,11 +45,8 @@ namespace Microsoft.Extensions.DependencyInjection
             return this;
         }
 
-        /// <summary>
-        /// Add the validation for authorization.
-        /// </summary>
-        /// <param name="enabled">A value indicating whether the validation is enabled.</param>
-        /// <returns>Helper for configuring gateway services.</returns>
+
+        /// <inheritdoc />
         public IPorthorBuilder AddAuthorizationValidation(bool enabled = true)
         {
             Services.Configure<AuthorizationOptions>(options => options.Enabled = enabled);
@@ -65,11 +54,7 @@ namespace Microsoft.Extensions.DependencyInjection
             return this;
         }
 
-        /// <summary>
-        /// Add the validation of query strings.
-        /// </summary>
-        /// <param name="enabled">A value indicating whether the validation is enabled.</param>
-        /// <returns>Helper for configuring gateway services.</returns>
+        /// <inheritdoc />
         public IPorthorBuilder AddQueryStringValidation(bool enabled = true)
         {
             Services.Configure<QueryStringOptions>(options => options.Enabled = enabled);
@@ -77,11 +62,7 @@ namespace Microsoft.Extensions.DependencyInjection
             return this;
         }
 
-        /// <summary>
-        /// Add the validation of content.
-        /// </summary>
-        /// <param name="options">The action used to configure the content options.</param>
-        /// <returns>Helper for configuring gateway services.</returns>
+        /// <inheritdoc />
         public IPorthorBuilder AddContentValidation(Action<ContentOptions> options)
         {
             Services.Configure(options);

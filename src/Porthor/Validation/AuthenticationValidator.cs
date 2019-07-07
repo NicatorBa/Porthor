@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Porthor.Validation
 {
@@ -9,11 +9,7 @@ namespace Porthor.Validation
     /// </summary>
     public class AuthenticationValidator : IValidator
     {
-        /// <summary>
-        /// Validates that the user of the current <see cref="HttpContext"/> is authenticated.
-        /// </summary>
-        /// <param name="context">Current context.</param>
-        /// <returns>The <see cref="Task{ValidationResult}"/> that represents the asynchronous validation process.</returns>
+        /// <inheritdoc />
         public Task<ValidationResult> ValidateAsync(HttpContext context)
         {
             if (!context.User.Identity.IsAuthenticated)

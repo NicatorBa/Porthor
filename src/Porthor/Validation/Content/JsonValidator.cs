@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using NJsonSchema;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using NJsonSchema;
 
 namespace Porthor.Validation.Content
 {
@@ -23,11 +23,7 @@ namespace Porthor.Validation.Content
             _jsonSchema = JsonSchema4.FromJsonAsync(Schema).GetAwaiter().GetResult();
         }
 
-        /// <summary>
-        /// Validates the json of current <see cref="HttpContext"/>.
-        /// </summary>
-        /// <param name="context">Current context.</param>
-        /// <returns>The <see cref="Task{ValidationResult}"/> that represents the asynchronous validation process.</returns>
+        /// <inheritdoc />
         public override async Task<ValidationResult> ValidateAsync(HttpContext context)
         {
             var errors = _jsonSchema.Validate(await StreamToString(context.Request.Body));

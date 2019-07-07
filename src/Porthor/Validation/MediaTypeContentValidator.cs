@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
-using Porthor.Configuration;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
+using Porthor.Configuration;
 
 namespace Porthor.Validation
 {
@@ -39,11 +39,7 @@ namespace Porthor.Validation
             }
         }
 
-        /// <summary>
-        /// Validates the content of the current <see cref="HttpContext"/>.
-        /// </summary>
-        /// <param name="context">Current context.</param>
-        /// <returns>The <see cref="Task{ValidationResult}"/> that represents the asynchronous validation process.</returns>
+        /// <inheritdoc />
         public async Task<ValidationResult> ValidateAsync(HttpContext context)
         {
             var contentType = new ContentType(context.Request.ContentType);

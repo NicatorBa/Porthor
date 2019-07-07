@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Routing;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -7,10 +11,6 @@ using Porthor.Configuration;
 using Porthor.Internal;
 using Porthor.Models;
 using Porthor.Validation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Porthor
 {
@@ -65,11 +65,7 @@ namespace Porthor
             _router = new RouteCollection();
         }
 
-        /// <summary>
-        /// Initialize the router with the specified rules.
-        /// </summary>
-        /// <param name="rules">Collection of routing rules.</param>
-        /// <returns>The <see cref="Task"/> that represents the asynchronous initialization process.</returns>
+        /// <inheritdoc />
         public Task InitializeAsync(IEnumerable<RoutingRule> rules)
         {
             var routeCollection = new RouteCollection();
@@ -129,21 +125,13 @@ namespace Porthor
             return Task.CompletedTask;
         }
 
-        /// <summary>
-        /// Get <see cref="VirtualPathData"/> from <see cref="VirtualPathContext"/>.
-        /// </summary>
-        /// <param name="context">A context for virtual path generation operations.</param>
-        /// <returns>Information about the route and virtual path.</returns>
+        /// <inheritdoc />
         public VirtualPathData GetVirtualPath(VirtualPathContext context)
         {
             return _router.GetVirtualPath(context);
         }
 
-        /// <summary>
-        /// Route the current context.
-        /// </summary>
-        /// <param name="context">A context object for Microsoft.AspNetCore.Routing.IRouter.RouteAsync(Microsoft.AspNetCore.Routing.RouteContext).</param>
-        /// <returns>The <see cref="Task"/> that represents the asynchronous routing process.</returns>
+        /// <inheritdoc />
         public Task RouteAsync(RouteContext context)
         {
             return _router.RouteAsync(context);

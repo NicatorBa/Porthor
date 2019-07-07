@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Porthor.Validation;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Porthor.Validation;
 
 namespace Porthor.Internal
 {
@@ -21,7 +21,7 @@ namespace Porthor.Internal
         private readonly IEnumerable<IValidator> _validators;
 
         /// <summary>
-        /// Contructs a new instance of <see cref="RequestHandler"/>.
+        /// Initialize a new instance of <see cref="RequestHandler"/>.
         /// </summary>
         /// <param name="uriBuilder">Uri builder for a request.</param>
         /// <param name="messageHandler">Message handler for HTTP.</param>
